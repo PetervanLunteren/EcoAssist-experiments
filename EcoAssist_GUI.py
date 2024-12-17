@@ -12,6 +12,7 @@
 # TODO: VIDEO - create video tutorials of all the steps (simple mode, advanced mode, annotation, postprocessing, etc.)
 # TODO: INSTALL WIZARD - https://jrsoftware.org/isinfo.php#features ask chatGDP "how to create a install wizard around a batch script"
 # TODO: SMOOTH - either average or logit
+# TODO: pywildlife lijkt niet meer te werken op macos - fixen?
 # TODO: EMPTIES - add a checkbox for folder separation where you can skip the empties from being copied
 # TODO: LOG SEQUENCE INFO - add sequence information to JSON, CSV, and XSLX 
 # TODO: SEQ SEP - add feature to separate images into sequence subdirs. Something like "treat sequence as detection" or "Include all images in the sequence" while doing the separation step.
@@ -111,6 +112,14 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 CLS_DIR = os.path.join(EcoAssist_files, "models", "cls")
 DET_DIR = os.path.join(EcoAssist_files, "models", "det")
 
+# set environment variables
+if os.name == 'nt': # windows
+    env_dir_fpath = os.path.join(EcoAssist_files, "miniforge", "envs") # TODO
+elif platform.system() == 'Darwin': # macos
+    env_dir_fpath = os.path.join(EcoAssist_files, "miniforge", "envs")
+else: # linux
+    env_dir_fpath = os.path.join(EcoAssist_files, "miniforge", "envs") # TODO
+
 # set versions
 with open(os.path.join(EcoAssist_files, 'EcoAssist', 'version.txt'), 'r') as file:
     current_EA_version = file.read().strip()
@@ -130,11 +139,25 @@ PIL_spp_image = PIL.Image.open(os.path.join(EcoAssist_files, "EcoAssist", "imgs"
 PIL_run_image = PIL.Image.open(os.path.join(EcoAssist_files, "EcoAssist", "imgs", "shuttle.png"))
 launch_count_file = os.path.join(EcoAssist_files, 'launch_count.json')
 
-# insert pythonpath
+# insert to PATH system variable
 sys.path.insert(0, os.path.join(EcoAssist_files))
-sys.path.insert(0, os.path.join(EcoAssist_files, "ai4eutils"))
+# sys.path.insert(0, os.path.join(EcoAssist_files, "ai4eutils")) # DEBUG
 sys.path.insert(0, os.path.join(EcoAssist_files, "yolov5"))
 sys.path.insert(0, os.path.join(EcoAssist_files, "cameratraps"))
+
+# DEBUG
+paths_to_add = [
+    os.path.join(EcoAssist_files),
+    os.path.join(EcoAssist_files, "cameratraps"),
+    os.path.join(EcoAssist_files, "yolov5"),
+    os.path.join(EcoAssist_files, "EcoAssist")
+]
+for path in paths_to_add:
+    sys.path.insert(0, path)
+print("sys.path:", sys.path)
+os.environ["PYTHONPATH"] = os.environ.get("PYTHONPATH", "") + ":" + ":".join(paths_to_add)
+print("PYTHONPATH:", os.environ["PYTHONPATH"])
+# DEBUG
 
 # import modules from forked repositories
 from visualise_detection.bounding_box import bounding_box as bb
@@ -1711,14 +1734,20 @@ def open_annotation_windows(recognition_file, class_list_txt, file_list_txt, lab
     value_hitl_stats_verified.configure(text = f"{n_verified_files}/{total_n_files}")
     hitl_progress_window.update_idletasks()
     
-    # locate open script
-    if os.name == 'nt':
-        labelImg_script = os.path.join(EcoAssist_files, "EcoAssist", "label.bat")
-    else:
-        labelImg_script = os.path.join(EcoAssist_files, "EcoAssist", "label.command")
+    # # locate open script # DEBUG
+    # if os.name == 'nt':
+    #     labelImg_script = os.path.join(EcoAssist_files, "EcoAssist", "label.bat")
+    # else:
+    #     labelImg_script = os.path.join(EcoAssist_files, "EcoAssist", "label.command")
+
+    # init paths
+    labelImg_dir = os.path.join(EcoAssist_files, "Human-in-the-loop")
+    labelImg_script = os.path.join(labelImg_dir, "labelImg.py")
+    python_executable = os.path.join(env_dir_fpath, f"ecoassistcondaenv-base", "bin", "python")
 
     # create command
     command_args = []
+    command_args.append(python_executable)
     command_args.append(labelImg_script)
     command_args.append(class_list_txt)
     command_args.append(file_list_txt)
@@ -1726,6 +1755,15 @@ def open_annotation_windows(recognition_file, class_list_txt, file_list_txt, lab
     # adjust command for unix OS
     if os.name != 'nt':
         command_args = "'" + "' '".join(command_args) + "'"
+
+    # prepend os-specific commands
+    platform_name = platform.system().lower()
+    if platform_name == 'darwin' and 'arm64' in platform.machine():
+        print("This is an Apple Silicon system.")
+        command_args =  "arch -arm64 " + command_args
+    elif platform_name == 'windows':
+        print("This is a Windows system.")
+        command_args = [f'cd "{labelImg_dir}" & pyrcc5 -o libs\resources.py resources.qrc &'] + command_args
 
     # log command
     print(command_args)
@@ -2224,11 +2262,11 @@ def classify_detections(json_fpath, data_type, simple_mode = False):
     progress_window.update_values(process = f"{data_type}_cls", status = "load")
     root.update()
 
-    # locate script
-    if os.name == 'nt':
-        classify_detections_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "start_class_inference.bat")
-    else:
-        classify_detections_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "start_class_inference.command")
+    # # locate script
+    # if os.name == 'nt': # DEBUG
+    #     classify_detections_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "start_class_inference.bat")
+    # else:
+    #     classify_detections_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "start_class_inference.command")
         
     # load model specific variables
     model_vars = load_model_vars() 
@@ -2255,13 +2293,44 @@ def classify_detections(json_fpath, data_type, simple_mode = False):
         cls_detec_thresh = var_cls_detec_thresh.get() 
         cls_class_thresh = var_cls_class_thresh.get()
         cls_animal_smooth = var_smooth_cls_animal.get()
+        
+    # init paths
+    python_executable = os.path.join(env_dir_fpath, f"ecoassistcondaenv-{cls_model_env}", "bin", "python")
+    inference_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "model_types", cls_model_type, "classify_detections.py")
 
-    # create command
+    # # create command
+    # command_args = [] # DEBUG
+    # command_args.append(classify_detections_script)
+    # command_args.append(str(cls_disable_GPU))
+    # command_args.append(cls_model_env)
+    # command_args.append(cls_model_type)
+    # command_args.append(EcoAssist_files)
+    # command_args.append(cls_model_fpath)
+    # command_args.append(str(cls_detec_thresh))
+    # command_args.append(str(cls_class_thresh))
+    # command_args.append(str(cls_animal_smooth))
+    # command_args.append(json_fpath)
+
+    # try:
+    #     command_args.append(temp_frame_folder)
+    # except NameError:
+    #     command_args.append("None")
+    #     pass
+
+    # # adjust command for unix OS
+    # if os.name != 'nt':
+    #     command_args = "'" + "' '".join(command_args) + "'"
+
+    # # log command
+    # print(command_args)
+    
+    
+
+    
+    # NEW CODE DEBUG
     command_args = []
-    command_args.append(classify_detections_script)
-    command_args.append(str(cls_disable_GPU))
-    command_args.append(cls_model_env)
-    command_args.append(cls_model_type)
+    command_args.append(python_executable)
+    command_args.append(inference_script)
     command_args.append(EcoAssist_files)
     command_args.append(cls_model_fpath)
     command_args.append(str(cls_detec_thresh))
@@ -2273,13 +2342,26 @@ def classify_detections(json_fpath, data_type, simple_mode = False):
     except NameError:
         command_args.append("None")
         pass
-
+    
     # adjust command for unix OS
     if os.name != 'nt':
         command_args = "'" + "' '".join(command_args) + "'"
 
+    # prepend with os-specific commands
+    if os.name == 'nt': # windows
+        if cls_disable_GPU:
+            command_args = ['set CUDA_VISIBLE_DEVICES="" &'] + command_args
+    elif platform.system() == 'Darwin': # macos
+        command_args = "export PYTORCH_ENABLE_MPS_FALLBACK=1 && " + command_args
+    else: # linux
+        if cls_disable_GPU:
+            command_args =  "CUDA_VISIBLE_DEVICES='' " + command_args
+        else:
+            command_args = "export PYTORCH_ENABLE_MPS_FALLBACK=1 && " + command_args
+
     # log command
     print(command_args)
+    # NEW CODE DEBUG
 
     # prepare process and cancel method per OS
     if os.name == 'nt':
@@ -2433,6 +2515,7 @@ def deploy_model(path_to_image_folder, selected_options, data_type, simple_mode 
     process_video_py = os.path.join(EcoAssist_files, "cameratraps", "megadetector", "detection", "process_video.py")
     video_recognition_file = "--output_json_file=" + os.path.join(chosen_folder, "video_recognition_file.json")
     GPU_param = "Unknown"
+    python_executable = os.path.join(env_dir_fpath, f"ecoassistcondaenv-base", "bin", "python")
 
     # select model based on user input via dropdown menu, or take MDv5a for simple mode 
     custom_model_bool = False
@@ -2466,21 +2549,21 @@ def deploy_model(path_to_image_folder, selected_options, data_type, simple_mode 
     # create commands for Windows
     if os.name == 'nt':
         if selected_options == []:
-            img_command = [sys.executable, run_detector_batch_py, det_model_fpath, '--threshold=0.01', chosen_folder, image_recognition_file]
-            vid_command = [sys.executable, process_video_py, '--max_width=1280', '--verbose', '--quality=85', video_recognition_file, det_model_fpath, chosen_folder]
+            img_command = [python_executable, run_detector_batch_py, det_model_fpath, '--threshold=0.01', chosen_folder, image_recognition_file]
+            vid_command = [python_executable, process_video_py, '--max_width=1280', '--verbose', '--quality=85', video_recognition_file, det_model_fpath, chosen_folder]
         else:
-            img_command = [sys.executable, run_detector_batch_py, det_model_fpath, *selected_options, '--threshold=0.01', chosen_folder, image_recognition_file]
-            vid_command = [sys.executable, process_video_py, *selected_options, '--max_width=1280', '--verbose', '--quality=85', video_recognition_file, det_model_fpath, chosen_folder]
+            img_command = [python_executable, run_detector_batch_py, det_model_fpath, *selected_options, '--threshold=0.01', chosen_folder, image_recognition_file]
+            vid_command = [python_executable, process_video_py, *selected_options, '--max_width=1280', '--verbose', '--quality=85', video_recognition_file, det_model_fpath, chosen_folder]
 
      # create command for MacOS and Linux
     else:
         if selected_options == []:
-            img_command = [f"'{sys.executable}' '{run_detector_batch_py}' '{det_model_fpath}' '--threshold=0.01' '{chosen_folder}' '{image_recognition_file}'"]
-            vid_command = [f"'{sys.executable}' '{process_video_py}' '--max_width=1280' '--verbose' '--quality=85' '{video_recognition_file}' '{det_model_fpath}' '{chosen_folder}'"]
+            img_command = [f"'{python_executable}' '{run_detector_batch_py}' '{det_model_fpath}' '--threshold=0.01' '{chosen_folder}' '{image_recognition_file}'"]
+            vid_command = [f"'{python_executable}' '{process_video_py}' '--max_width=1280' '--verbose' '--quality=85' '{video_recognition_file}' '{det_model_fpath}' '{chosen_folder}'"]
         else:
             selected_options = "' '".join(selected_options)
-            img_command = [f"'{sys.executable}' '{run_detector_batch_py}' '{det_model_fpath}' '{selected_options}' '--threshold=0.01' '{chosen_folder}' '{image_recognition_file}'"]
-            vid_command = [f"'{sys.executable}' '{process_video_py}' '{selected_options}' '--max_width=1280' '--verbose' '--quality=85' '{video_recognition_file}' '{det_model_fpath}' '{chosen_folder}'"]
+            img_command = [f"'{python_executable}' '{run_detector_batch_py}' '{det_model_fpath}' '{selected_options}' '--threshold=0.01' '{chosen_folder}' '{image_recognition_file}'"]
+            vid_command = [f"'{python_executable}' '{process_video_py}' '{selected_options}' '--max_width=1280' '--verbose' '--quality=85' '{video_recognition_file}' '{det_model_fpath}' '{chosen_folder}'"]
 
     # pick one command
     if data_type == "img":
