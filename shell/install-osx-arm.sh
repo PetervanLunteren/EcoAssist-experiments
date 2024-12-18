@@ -58,27 +58,16 @@ echo "visualise_detection cloned"
 ### download megadetector 
 curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "${root}/models/det/MegaDetector 5a/md_v5a.0.0.pt"
 
-# print current working directory
-echo "Current working directory: $(pwd)"
-
-echo "root: ${root}"
-
-# print all files in current working directory
-echo "Files in current working directory:"
-ls -la
-
-# print all files in EcoAssist folder
-echo "Files in EcoAssist folder:"
-ls -l ${root}
-
 ### source conda 
-if [ -f /Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh ]; then
-    source /Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh
+if [ -f "/Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh" ]; then
+    source "/Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh"
+    source "/Applications/.EcoAssist_files/miniforge/bin/activate"
     conda_exe="/Applications/.EcoAssist_files/miniforge/bin/conda"
     echo "Conda found in /Applications/.EcoAssist_files/miniforge"
 fi
 if [ -f "$HOME/miniforge/etc/profile.d/conda.sh" ]; then
     source "$HOME/miniforge/etc/profile.d/conda.sh"
+    source "$HOME/miniforge/bin/activate"
     conda_exe="$HOME/miniforge/bin/conda"
     echo "Conda found in $HOME/miniforge"
 fi
