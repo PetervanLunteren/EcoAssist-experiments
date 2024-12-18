@@ -58,20 +58,22 @@ echo "visualise_detection cloned"
 curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "EcoAssist/models/det/MegaDetector 5a/md_v5a.0.0.pt"
 
 ### source conda 
-if [ -f /opt/conda/etc/profile.d/conda.sh ]; then
-    source /opt/conda/etc/profile.d/conda.sh
-    echo "Conda found in /opt/conda"
-fi
 if [ -f /Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh ]; then
     source /Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh
+    conda_exe="/Applications/.EcoAssist_files/miniforge/bin/conda"
     echo "Conda found in /Applications/.EcoAssist_files/miniforge"
+fi
+if [ -f "$HOME/miniforge/etc/profile.d/conda.sh" ]; then
+    source "$HOME/miniforge/etc/profile.d/conda.sh"
+    conda_exe="$HOME/miniforge/bin/conda"
+    echo "Conda found in $HOME/miniforge"
 fi
 
 ### install env-base
-conda env create --file="EcoAssist/cameratraps/envs/environment-detector-m1.yml" -p "EcoAssist/envs/env-base"
-conda activate "EcoAssist/envs/env-base"
-conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 -c pytorch -y
-conda uninstall opencv -y
+$conda_exe env create --file="EcoAssist/cameratraps/envs/environment-detector-m1.yml" -p "EcoAssist/envs/env-base"
+$conda_exe activate "EcoAssist/envs/env-base"
+$conda_exe install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 -c pytorch -y
+$conda_exe uninstall opencv -y
 pip install opencv-python
 pip install RangeSlider
 pip install gpsphoto
@@ -88,16 +90,16 @@ pip install "thop>=0.1.1"
 pip install "protobuf<=3.20.1"
 pip install "setuptools>=65.5.1"
 pip install PySide6
-conda install lxml -y
+$conda_exe install lxml -y
 make Human-in-the-loop/pyside6
-conda deactivate
+$conda_exe deactivate
 
 ### install env-tensorflow
-conda env create --file="EcoAssist/EcoAssist/classification_utils/envs/tensorflow-macos-silicon.yml" -p "EcoAssist/envs/env-tensorflow"
+$conda_exe env create --file="EcoAssist/EcoAssist/classification_utils/envs/tensorflow-macos-silicon.yml" -p "EcoAssist/envs/env-tensorflow"
 
 ### install env-pytorch
-conda create -p "EcoAssist/envs/env-pytorch" python=3.8 -y
-conda activate "EcoAssist/envs/env-pytorch"
+$conda_exe create -p "EcoAssist/envs/env-pytorch" python=3.8 -y
+$conda_exe activate "EcoAssist/envs/env-pytorch"
 pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
 pip install "ultralytics==8.0.191"
 pip install "numpy==1.24.1"
@@ -105,25 +107,25 @@ pip install "humanfriendly==10.0"
 pip install "jsonpickle==3.0.2"
 pip install timm
 pip install dill
-conda deactivate
+$conda_exe deactivate
 
 ### install env-pywildlife
-conda create -p "EcoAssist/envs/env-pywildlife" python=3.8 -y
-conda activate "EcoAssist/envs/env-pywildlife"
+$conda_exe create -p "EcoAssist/envs/env-pywildlife" python=3.8 -y
+$conda_exe activate "EcoAssist/envs/env-pywildlife"
 pip install pytorchwildlife
 pip install "setuptools<70"
 pip install jsonpickle
-conda deactivate
+$conda_exe deactivate
 
 # create fresh pyinstaller environment
-conda create -n fresh python=3.8 pyinstaller -y
-conda activate fresh
+$conda_exe create -n fresh python=3.8 pyinstaller -y
+$conda_exe activate fresh
 pyinstaller --onefile --windowed --icon="EcoAssist/EcoAssist/imgs/logo_small_bg.icns" "EcoAssist/main.py"
-conda deactivate
+$conda_exe deactivate
 
 # clean
-conda clean --all --yes --force-pkgs-dirs
-conda clean --all --yes
+$conda_exe clean --all --yes --force-pkgs-dirs
+$conda_exe clean --all --yes
 
 # move and rename executables to EcoAssist
 mv "dist/main" "EcoAssist/debug_mode"
