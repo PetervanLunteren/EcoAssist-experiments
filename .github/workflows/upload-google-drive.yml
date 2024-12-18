@@ -1,0 +1,25 @@
+name: Upload to Google Drive
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install gdrive
+        run: |
+          curl -L https://github.com/prasmussen/gdrive/releases/download/2.1.0/gdrive-linux-x64 -o /usr/local/bin/gdrive
+          chmod +x /usr/local/bin/gdrive
+
+      - name: Upload to Google Drive
+        env:
+          GDRIVE_TOKEN: ${{ secrets.GDRIVE_TOKEN }}
+        run: |
+          echo "${{ secrets.GDRIVE_TOKEN }}" > ~/.gdrive/token_v2.json
+          gdrive upload --parent <folder-id> ./path/to/your/file.zip
