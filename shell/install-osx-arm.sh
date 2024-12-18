@@ -5,6 +5,7 @@
 ### Peter van Lunteren, 18 Dec 2024 (latest edit)
 
 ### refresh root
+root="$HOME/EcoAssist"
 if [ -d "EcoAssist" ]; then
     rm -rf EcoAssist
     echo "EcoAssist folder removed"
@@ -29,6 +30,11 @@ rm -rf "EcoAssist/EcoAssist-experiments/.git"
 mv "EcoAssist/EcoAssist-experiments" "EcoAssist/EcoAssist" # DEBUG
 mv "EcoAssist/EcoAssist/main.py" "EcoAssist/main.py"
 echo "EcoAssist cloned"
+
+# print current working directory
+echo "Current working directory: $(pwd)"
+
+exit 1
 
 git clone https://github.com/agentmorris/MegaDetector.git "EcoAssist/MegaDetector"
 git -C "EcoAssist/MegaDetector" checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
