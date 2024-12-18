@@ -126,11 +126,5 @@ conda clean --all --yes --force-pkgs-dirs
 conda clean --all --yes
 
 # move and rename executables to EcoAssist
-RELEASE_VERSION="refs/tags/v5.22" # DEBUG this can be sent via github actions:
-                                                    #   - name: Get release version
-                                                    #     run: ./<shell-script>.sh
-                                                    #     env:
-                                                    #       RELEASE_VERSION: ${{ github.ref }}
-RELEASE_VERSION=${RELEASE_VERSION#refs/tags/}
 mv "dist/main" "EcoAssist/debug_mode"
 mv "dist/main.app" "EcoAssist/EcoAssist ${RELEASE_VERSION}.app"
