@@ -12,12 +12,12 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Miniconda
-        run: |
-          mkdir "$HOME/miniforge"
-          curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
-          bash miniforge.sh -b -p "$HOME/miniforge"
-          echo "$HOME/miniforge"
+      # - name: Install Miniconda
+      #   run: |
+      #     mkdir "$HOME/miniforge"
+      #     curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
+      #     bash miniforge.sh -b -p "$HOME/miniforge"
+      #     echo "$HOME/miniforge"
       
       - name: run installation script
         run: |
