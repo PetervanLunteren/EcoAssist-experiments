@@ -31,11 +31,6 @@ mv "EcoAssist/EcoAssist-experiments" "EcoAssist/EcoAssist" # DEBUG
 mv "EcoAssist/EcoAssist/main.py" "EcoAssist/main.py"
 echo "EcoAssist cloned"
 
-# print current working directory
-echo "Current working directory: $(pwd)"
-
-exit 1
-
 git clone https://github.com/agentmorris/MegaDetector.git "EcoAssist/MegaDetector"
 git -C "EcoAssist/MegaDetector" checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
 rm -rf "EcoAssist/MegaDetector/.git"
@@ -62,6 +57,19 @@ echo "visualise_detection cloned"
 
 ### download megadetector 
 curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "EcoAssist/models/det/MegaDetector 5a/md_v5a.0.0.pt"
+
+# print current working directory
+echo "Current working directory: $(pwd)"
+
+# print all files in current working directory
+echo "Files in current working directory:"
+ls -la
+
+# print all files in EcoAssist folder
+echo "Files in EcoAssist folder:"
+ls -la EcoAssist
+
+exit 1
 
 ### source conda 
 if [ -f /Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh ]; then
