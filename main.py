@@ -25,7 +25,7 @@ print(f"   sys.executable: {sys.executable}")
 print(f"       GUI_script: {GUI_script}")
 
 def get_python_interprator(env_name):
-    return os.path.join(EcoAssist_files, "envs", env_name, "bin", "python")
+    return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "bin", "python")
 
 # check base env
 subprocess.run([get_python_interprator("base"), GUI_script])
