@@ -6,6 +6,23 @@
 import os
 import subprocess
 import sys
+import platform
+
+# show info message
+def show_info_message(message):
+    system = platform.system()
+    if system == 'Windows':
+        subprocess.Popen(['python', '-c', f'import ctypes; ctypes.windll.user32.MessageBoxW(0, "{message}", "Information", 0x40)'])
+    elif system == 'Darwin':
+        subprocess.Popen(['osascript', '-e', f'display dialog "{message}"'])
+    elif system == 'Linux':
+        subprocess.Popen(['zenity', '--info', '--text', message])
+    else:
+        print("Unsupported OS")
+        return
+show_info_message("Starting EcoAssist...\n\n"
+                  "This may take a few minutes initially as dependencies, environments, and models are loaded.\n\n"
+                  "Don't worry – subsequent starts will be faster!")
 
 # clean path
 if getattr(sys, 'frozen', False):
