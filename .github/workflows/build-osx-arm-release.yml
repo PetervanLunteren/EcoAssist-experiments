@@ -13,7 +13,9 @@ jobs:
         uses: actions/checkout@v3
         
       - name: run installation script
-        run: ./shell/install-osx-arm.sh
+        run: |
+          chmod +x ./shell/install-osx-arm.sh
+          ./shell/install-osx-arm.sh
         env:
           RELEASE_VERSION: ${{ github.event.release.tag_name }}
 
