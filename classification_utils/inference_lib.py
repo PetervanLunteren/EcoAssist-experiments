@@ -11,7 +11,6 @@ import contextlib
 from tqdm import tqdm
 from PIL import Image
 from collections import defaultdict
-from EcoAssist.smooth_params import *
 from megadetector.data_management import read_exif
 from megadetector.data_management import cct_json_utils
 from megadetector.data_management.read_exif import parse_exif_datetime_string
