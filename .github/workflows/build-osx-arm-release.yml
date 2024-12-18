@@ -29,7 +29,7 @@ jobs:
       - name: zip folder contents
         run: |
           version=${{ github.event.release.tag_name }}
-          zip -r osx-arm-${version}.zip ./Ecoassist/
+          zip -r osx-arm-${version}.zip "$HOME/EcoAssist"
 
       - name: upload release asset
         uses: actions/upload-release-asset@v1
