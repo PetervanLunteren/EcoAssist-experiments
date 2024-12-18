@@ -114,11 +114,11 @@ DET_DIR = os.path.join(EcoAssist_files, "models", "det")
 
 # set environment variables
 if os.name == 'nt': # windows
-    env_dir_fpath = os.path.join(EcoAssist_files, "miniforge", "envs") # TODO
+    env_dir_fpath = os.path.join(EcoAssist_files, "envs") # TODO
 elif platform.system() == 'Darwin': # macos
-    env_dir_fpath = os.path.join(EcoAssist_files, "miniforge", "envs")
+    env_dir_fpath = os.path.join(EcoAssist_files, "envs")
 else: # linux
-    env_dir_fpath = os.path.join(EcoAssist_files, "miniforge", "envs") # TODO
+    env_dir_fpath = os.path.join(EcoAssist_files, "envs") # TODO
 
 # set versions
 with open(os.path.join(EcoAssist_files, 'EcoAssist', 'version.txt'), 'r') as file:
@@ -1743,7 +1743,7 @@ def open_annotation_windows(recognition_file, class_list_txt, file_list_txt, lab
     # init paths
     labelImg_dir = os.path.join(EcoAssist_files, "Human-in-the-loop")
     labelImg_script = os.path.join(labelImg_dir, "labelImg.py")
-    python_executable = os.path.join(env_dir_fpath, f"ecoassistcondaenv-base", "bin", "python")
+    python_executable = os.path.join(env_dir_fpath, "base", "bin", "python")
 
     # create command
     command_args = []
@@ -2295,7 +2295,7 @@ def classify_detections(json_fpath, data_type, simple_mode = False):
         cls_animal_smooth = var_smooth_cls_animal.get()
         
     # init paths
-    python_executable = os.path.join(env_dir_fpath, f"ecoassistcondaenv-{cls_model_env}", "bin", "python")
+    python_executable = os.path.join(env_dir_fpath, cls_model_env, "bin", "python")
     inference_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "model_types", cls_model_type, "classify_detections.py")
 
     # # create command
@@ -2515,24 +2515,24 @@ def deploy_model(path_to_image_folder, selected_options, data_type, simple_mode 
     process_video_py = os.path.join(EcoAssist_files, "cameratraps", "megadetector", "detection", "process_video.py")
     video_recognition_file = "--output_json_file=" + os.path.join(chosen_folder, "video_recognition_file.json")
     GPU_param = "Unknown"
-    python_executable = os.path.join(env_dir_fpath, f"ecoassistcondaenv-base", "bin", "python")
+    python_executable = os.path.join(env_dir_fpath, "base", "bin", "python")
 
     # select model based on user input via dropdown menu, or take MDv5a for simple mode 
     custom_model_bool = False
     if simple_mode:
         det_model_fpath = os.path.join(DET_DIR, "MegaDetector 5a", "md_v5a.0.0.pt")
-        switch_yolov5_git_to("old models")
+        switch_yolov5_version("old models")
     elif var_det_model.get() != dpd_options_model[lang_idx][-1]: # if not chosen the last option, which is "custom model"
         det_model_fname = load_model_vars("det")["model_fname"]
         det_model_fpath = os.path.join(DET_DIR, var_det_model.get(), det_model_fname)
-        switch_yolov5_git_to("old models")
+        switch_yolov5_version("old models")
     else:
         # set model file
         det_model_fpath = var_det_model_path.get()
         custom_model_bool = True
 
         # set yolov5 git to accommodate new models (checkout depending on how you retrain MD)
-        switch_yolov5_git_to("new models") 
+        switch_yolov5_version("new models") 
         
         # extract classes
         label_map = extract_label_map_from_model(det_model_fpath)
@@ -4333,20 +4333,58 @@ def browse_file(var, var_short, var_path, dsp, filetype, cut_off_length, options
     else:
         var.set(options[0])
 
-# switch beteen versions of yolov5 git to accommodate either old or new models
-def switch_yolov5_git_to(model_type):
-    # log
-    print(f"EXECUTED: {sys._getframe().f_code.co_name}({locals()})\n")
+# # switch beteen versions of yolov5 git to accommodate either old or new models # DEBUG
+# def switch_yolov5_git_to(model_type):
+#     # log
+#     print(f"EXECUTED: {sys._getframe().f_code.co_name}({locals()})\n")
     
-    # checkout repo
-    repository = git.Repo(os.path.join(EcoAssist_files, "yolov5"))
-    if model_type == "old models": # MD
-        if platform.processor() == "arm" and os.name != "nt": # M1 and M2
-            repository.git.checkout("868c0e9bbb45b031e7bfd73c6d3983bcce07b9c1", force = True) 
-        else:
-            repository.git.checkout("c23a441c9df7ca9b1f275e8c8719c949269160d1", force = True)
-    elif model_type == "new models": # models trained trough EA v3.4
-        repository.git.checkout("3e55763d45f9c5f8217e4dad5ba1e6c1f42e3bf8", force = True)
+#     # checkout repo
+#     repository = git.Repo(os.path.join(EcoAssist_files, "yolov5"))
+#     if model_type == "old models": # MD
+#         if platform.processor() == "arm" and os.name != "nt": # M1 and M2
+#             repository.git.checkout("868c0e9bbb45b031e7bfd73c6d3983bcce07b9c1", force = True) 
+#         else:
+#             repository.git.checkout("c23a441c9df7ca9b1f275e8c8719c949269160d1", force = True)
+#     elif model_type == "new models": # models trained trough EA v3.4
+#         repository.git.checkout("3e55763d45f9c5f8217e4dad5ba1e6c1f42e3bf8", force = True)
+
+# def switch_yolov5_version(model_type):
+#     # log
+#     print(f"EXECUTED: {sys._getframe().f_code.co_name}({locals()})\n")
+    
+#     # set the path to the desired version
+#     base_path = os.path.join(EcoAssist_files, "yolov5_versions")
+#     if model_type == "old models":
+#         version_path = os.path.join(base_path, "yolov5_old")
+#     elif model_type == "new models":
+#         version_path = os.path.join(base_path, "yolov5_new")
+#     else:
+#         raise ValueError("Invalid model_type")
+
+#     # Update the code path or environment variable
+#     os.environ['YOLOV5_PATH'] = version_path
+#     print(f"Switched to YOLOv5 version: {version_path}")
+
+# switches the yolov5 version by modifying the python import path
+def switch_yolov5_version(model_type):
+    # log
+    print(f"EXECUTED: {sys._getframe().f_code.co_name}({model_type})\n")
+    
+    # set the path to the desired version
+    base_path = os.path.join(EcoAssist_files, "yolov5_versions")
+    if model_type == "old models":
+        version_path = os.path.join(base_path, "yolov5_old")
+    elif model_type == "new models":
+        version_path = os.path.join(base_path, "yolov5_new")
+    else:
+        raise ValueError("Invalid model_type")
+    
+    # remove the old version from sys.path if it's already there
+    if version_path in sys.path:
+        sys.path.remove(version_path)
+        
+    # add to the beginning
+    sys.path.insert(0, version_path)
 
 # extract label map from custom model
 def extract_label_map_from_model(model_file):
