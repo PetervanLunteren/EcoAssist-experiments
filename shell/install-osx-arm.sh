@@ -74,62 +74,56 @@ fi
 
 ### install env-base
 $conda_exe env create --file="${root}/cameratraps/envs/environment-detector-m1.yml" -p "${root}/envs/env-base"
-$conda_exe activate "${root}/envs/env-base"
-$conda_exe install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 -c pytorch -y
-$conda_exe uninstall opencv -y
-pip install opencv-python
-pip install RangeSlider
-pip install gpsphoto
-pip install exifread
-pip install piexif
-pip install openpyxl
-pip install customtkinter
-pip install CTkTable
-pip install folium
-pip install plotly
-pip install "gitpython>=3.1.30"
-pip install "tensorboard>=2.4.1"
-pip install "thop>=0.1.1"
-pip install "protobuf<=3.20.1"
-pip install "setuptools>=65.5.1"
-pip install PySide6
-$conda_exe install lxml -y
-make Human-in-the-loop/pyside6
-$conda_exe deactivate
+$conda_exe run -p "${root}/envs/env-base" conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 -c pytorch -y
+$conda_exe run -p "${root}/envs/env-base" conda uninstall opencv -y
+$conda_exe run -p "${root}/envs/env-base" pip install opencv-python
+$conda_exe run -p "${root}/envs/env-base" pip install RangeSlider
+$conda_exe run -p "${root}/envs/env-base" pip install gpsphoto
+$conda_exe run -p "${root}/envs/env-base" pip install exifread
+$conda_exe run -p "${root}/envs/env-base" pip install piexif
+$conda_exe run -p "${root}/envs/env-base" pip install openpyxl
+$conda_exe run -p "${root}/envs/env-base" pip install customtkinter
+$conda_exe run -p "${root}/envs/env-base" pip install CTkTable
+$conda_exe run -p "${root}/envs/env-base" pip install folium
+$conda_exe run -p "${root}/envs/env-base" pip install plotly
+$conda_exe run -p "${root}/envs/env-base" pip install "gitpython>=3.1.30"
+$conda_exe run -p "${root}/envs/env-base" pip install "tensorboard>=2.4.1"
+$conda_exe run -p "${root}/envs/env-base" pip install "thop>=0.1.1"
+$conda_exe run -p "${root}/envs/env-base" pip install "protobuf<=3.20.1"
+$conda_exe run -p "${root}/envs/env-base" pip install "setuptools>=65.5.1"
+$conda_exe run -p "${root}/envs/env-base" pip install PySide6
+$conda_exe run -p "${root}/envs/env-base" conda install lxml -y
+make "${root}/Human-in-the-loop/pyside6"
 
 ### install env-tensorflow
 $conda_exe env create --file="${root}/EcoAssist/classification_utils/envs/tensorflow-macos-silicon.yml" -p "${root}/envs/env-tensorflow"
 
 ### install env-pytorch
 $conda_exe create -p "${root}/envs/env-pytorch" python=3.8 -y
-$conda_exe activate "${root}/envs/env-pytorch"
-pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
-pip install "ultralytics==8.0.191"
-pip install "numpy==1.24.1"
-pip install "humanfriendly==10.0"
-pip install "jsonpickle==3.0.2"
-pip install timm
-pip install dill
-$conda_exe deactivate
+$conda_exe run -p "${root}/envs/env-pytorch" pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
+$conda_exe run -p "${root}/envs/env-pytorch" pip install "ultralytics==8.0.191"
+$conda_exe run -p "${root}/envs/env-pytorch" pip install "numpy==1.24.1"
+$conda_exe run -p "${root}/envs/env-pytorch" pip install "humanfriendly==10.0"
+$conda_exe run -p "${root}/envs/env-pytorch" pip install "jsonpickle==3.0.2"
+$conda_exe run -p "${root}/envs/env-pytorch" pip install timm
+$conda_exe run -p "${root}/envs/env-pytorch" pip install dill
 
 ### install env-pywildlife
 $conda_exe create -p "${root}/envs/env-pywildlife" python=3.8 -y
-$conda_exe activate "${root}/envs/env-pywildlife"
-pip install pytorchwildlife
-pip install "setuptools<70"
-pip install jsonpickle
-$conda_exe deactivate
+$conda_exe run -p "${root}/envs/env-pywildlife" pip install pytorchwildlife
+$conda_exe run -p "${root}/envs/env-pywildlife" pip install "setuptools<70"
+$conda_exe run -p "${root}/envs/env-pywildlife" pip install jsonpickle
 
-# create fresh pyinstaller environment
-$conda_exe create -n fresh python=3.8 pyinstaller -y
-$conda_exe activate fresh
-pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
-$conda_exe deactivate
+# # create fresh pyinstaller environment
+# $conda_exe create -n fresh python=3.8 pyinstaller -y
+# $conda_exe activate fresh
+# pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
+# $conda_exe deactivate
 
 # clean
 $conda_exe clean --all --yes --force-pkgs-dirs
 $conda_exe clean --all --yes
 
-# move and rename executables to EcoAssist
-mv "${HOME}/dist/main" "${root}/debug_mode"
-mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
+# # move and rename executables to EcoAssist
+# mv "${HOME}/dist/main" "${root}/debug_mode"
+# mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
