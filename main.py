@@ -42,7 +42,7 @@ GUI_script = os.path.join(EcoAssist_files, "EcoAssist", "EcoAssist_GUI.py")
 first_startup_file = os.path.join(EcoAssist_files, "first_startup.txt")
 
 # show info message
-if not os.path.exists(first_startup_file):
+if os.path.exists(first_startup_file):
     show_info_message("Starting EcoAssist...\n\n"
                     "This may take a few minutes initially as dependencies, environments, and models are loaded.\n\n"
                     "Don't worry – subsequent starts will be faster!")
