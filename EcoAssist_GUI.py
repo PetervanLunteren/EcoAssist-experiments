@@ -142,20 +142,22 @@ launch_count_file = os.path.join(EcoAssist_files, 'launch_count.json')
 # insert to PATH system variable
 sys.path.insert(0, os.path.join(EcoAssist_files))
 # sys.path.insert(0, os.path.join(EcoAssist_files, "ai4eutils")) # DEBUG
-sys.path.insert(0, os.path.join(EcoAssist_files, "yolov5"))
+# sys.path.insert(0, os.path.join(EcoAssist_files, "yolov5"))
 sys.path.insert(0, os.path.join(EcoAssist_files, "cameratraps"))
 
 # DEBUG
 paths_to_add = [
     os.path.join(EcoAssist_files),
     os.path.join(EcoAssist_files, "cameratraps"),
-    os.path.join(EcoAssist_files, "yolov5"),
+    os.path.join(EcoAssist_files, "cameratraps", "megadetector"),
+    # os.path.join(EcoAssist_files, "yolov5"), # DEBUG
     os.path.join(EcoAssist_files, "EcoAssist")
 ]
 for path in paths_to_add:
     sys.path.insert(0, path)
 print("sys.path:", sys.path)
-os.environ["PYTHONPATH"] = os.environ.get("PYTHONPATH", "") + ":" + ":".join(paths_to_add)
+PYTHONPATH_separator = ":" if platform.system() != "Windows" else ";"
+os.environ["PYTHONPATH"] = os.environ.get("PYTHONPATH", "") + PYTHONPATH_separator + PYTHONPATH_separator.join(paths_to_add)
 print("PYTHONPATH:", os.environ["PYTHONPATH"])
 # DEBUG
 
@@ -4373,18 +4375,20 @@ def switch_yolov5_version(model_type):
     # set the path to the desired version
     base_path = os.path.join(EcoAssist_files, "yolov5_versions")
     if model_type == "old models":
-        version_path = os.path.join(base_path, "yolov5_old")
+        version_path = os.path.join(base_path, "yolov5_old", "yolov5")
     elif model_type == "new models":
-        version_path = os.path.join(base_path, "yolov5_new")
+        version_path = os.path.join(base_path, "yolov5_new", "yolov5")
     else:
         raise ValueError("Invalid model_type")
-    
-    # remove the old version from sys.path if it's already there
-    if version_path in sys.path:
-        sys.path.remove(version_path)
         
-    # add to the beginning
-    sys.path.insert(0, version_path)
+    # add yolov5 checkout to PATH if not already there
+    if version_path not in sys.path:
+        sys.path.insert(0, version_path)
+    
+    # add yolov5 checkout to PYTHONPATH if not already there
+    current_pythonpath = os.environ.get("PYTHONPATH", "")
+    if not current_pythonpath.startswith(PYTHONPATH_separator + version_path + PYTHONPATH_separator):
+        os.environ["PYTHONPATH"] = PYTHONPATH_separator + PYTHONPATH_separator.join(paths_to_add) + current_pythonpath
 
 # extract label map from custom model
 def extract_label_map_from_model(model_file):
