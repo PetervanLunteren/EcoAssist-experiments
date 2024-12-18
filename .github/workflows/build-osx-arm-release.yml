@@ -12,10 +12,11 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
         
+      - name: ensure script is executable
+        run: chmod +x ./shell/install-osx-arm.sh
+      
       - name: run installation script
-        run: |
-          chmod +x ./shell/install-osx-arm.sh
-          ./shell/install-osx-arm.sh
+        run: ./shell/install-osx-arm.sh
         env:
           RELEASE_VERSION: ${{ github.event.release.tag_name }}
 
