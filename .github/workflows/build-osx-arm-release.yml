@@ -1,0 +1,31 @@
+name: build and attach macOS ARM release
+
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  build-and-zip:
+    runs-on: macos-13
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v3
+        
+      - name: run installation script
+        run: ./shell/install-osx-arm.sh
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
+
+      - name: zip folder contents
+        run: |
+          version=${{ github.event.release.tag_name }}
+          zip -r osx-arm-${version}.zip ./Ecoassist/
+
+      - name: upload release asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./osx-arm-${{ github.event.release.tag_name }}.zip
+          asset_name: osx-arm-${{ github.event.release.tag_name }}.zip
+          asset_content_type: application/zip
