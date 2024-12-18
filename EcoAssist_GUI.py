@@ -139,27 +139,17 @@ PIL_spp_image = PIL.Image.open(os.path.join(EcoAssist_files, "EcoAssist", "imgs"
 PIL_run_image = PIL.Image.open(os.path.join(EcoAssist_files, "EcoAssist", "imgs", "shuttle.png"))
 launch_count_file = os.path.join(EcoAssist_files, 'launch_count.json')
 
-# insert to PATH system variable
-sys.path.insert(0, os.path.join(EcoAssist_files))
-# sys.path.insert(0, os.path.join(EcoAssist_files, "ai4eutils")) # DEBUG
-# sys.path.insert(0, os.path.join(EcoAssist_files, "yolov5"))
-sys.path.insert(0, os.path.join(EcoAssist_files, "cameratraps"))
-
-# DEBUG
+# insert dependencies to system variables
 paths_to_add = [
     os.path.join(EcoAssist_files),
     os.path.join(EcoAssist_files, "cameratraps"),
     os.path.join(EcoAssist_files, "cameratraps", "megadetector"),
-    # os.path.join(EcoAssist_files, "yolov5"), # DEBUG
     os.path.join(EcoAssist_files, "EcoAssist")
 ]
 for path in paths_to_add:
     sys.path.insert(0, path)
-print("sys.path:", sys.path)
 PYTHONPATH_separator = ":" if platform.system() != "Windows" else ";"
 os.environ["PYTHONPATH"] = os.environ.get("PYTHONPATH", "") + PYTHONPATH_separator + PYTHONPATH_separator.join(paths_to_add)
-print("PYTHONPATH:", os.environ["PYTHONPATH"])
-# DEBUG
 
 # import modules from forked repositories
 from visualise_detection.bounding_box import bounding_box as bb
@@ -4387,9 +4377,10 @@ def switch_yolov5_version(model_type):
     
     # add yolov5 checkout to PYTHONPATH if not already there
     current_pythonpath = os.environ.get("PYTHONPATH", "")
-    if not current_pythonpath.startswith(PYTHONPATH_separator + version_path + PYTHONPATH_separator):
-        os.environ["PYTHONPATH"] = PYTHONPATH_separator + PYTHONPATH_separator.join(paths_to_add) + current_pythonpath
-
+    PYTHONPATH_to_add = version_path + PYTHONPATH_separator
+    if not current_pythonpath.startswith(PYTHONPATH_to_add):
+        os.environ["PYTHONPATH"] = PYTHONPATH_to_add + current_pythonpath
+        
 # extract label map from custom model
 def extract_label_map_from_model(model_file):
     # log
