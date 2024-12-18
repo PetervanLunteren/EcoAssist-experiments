@@ -11,12 +11,17 @@ jobs:
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
-        
-      - name: ensure script is executable
-        run: chmod +x ./shell/install-osx-arm.sh
+
+      - name: Install Miniconda
+        run: |
+          curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
+          bash miniforge -b -p "$HOME/miniforge"
+          echo "$HOME/miniforge"
       
       - name: run installation script
-        run: ./shell/install-osx-arm.sh
+        run: |
+          chmod +x ./shell/install-osx-arm.sh
+          ./shell/install-osx-arm.sh
         env:
           RELEASE_VERSION: ${{ github.event.release.tag_name }}
 
