@@ -114,7 +114,7 @@ jobs:
         id: get_release
         run: |
           release=$(gh release view ${{ github.ref_name }} --json body -q .body)
-          echo "body=$release" >> $GITHUB_ENV
+          echo "$release" > release_body.txt
   
       - name: Append link to release body
         id: append_link
@@ -126,4 +126,4 @@ jobs:
   
       - name: Update the release body
         run: |
-          gh release edit ${{ github.ref_name }} --notes "${{ env.new_body }}"
+          gh release edit ${{ github.ref_name }} --notes "$(cat new_release_body.txt)"
