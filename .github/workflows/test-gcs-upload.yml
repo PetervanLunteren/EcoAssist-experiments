@@ -1,0 +1,36 @@
+name: Test GCS Upload
+
+on:
+  workflow_dispatch: # Trigger manually from the Actions tab
+  # push:
+  #   branches:
+  #     - main  # Trigger on pushes to the main branch
+
+jobs:
+  test_upload:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout this repository
+      uses: actions/checkout@v3
+
+    - name: Clone a public GitHub repository
+      run: |
+        git clone https://github.com/octocat/hello-world.git
+        echo "Repository cloned!"
+
+    - name: Zip the cloned repository
+      run: |
+        zip -r hello-world.zip hello-world/
+        echo "Repository zipped!"
+
+    - name: Set up Google Cloud SDK
+      uses: google-github-actions/setup-gcloud@v1
+      with:
+        service_account_key: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
+        project_id: github-file-storage
+
+    - name: Upload zip to GCS
+      run: |
+        gsutil cp hello-world.zip gs://github-release-files-storage/
+        echo "File uploaded to GCS!"
