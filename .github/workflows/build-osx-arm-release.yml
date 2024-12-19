@@ -26,6 +26,12 @@ jobs:
 
       - name: Create conda env and install Pyinstaller
         run: |
+
+          # Initialize conda in the shell
+          source "$HOME/miniforge/etc/profile.d/conda.sh"
+          conda init bash  # This initializes conda for bash
+          source "$HOME/miniforge/etc/profile.d/conda.sh"  # Re-source after init to apply changes
+          
           # Create fresh pyinstaller environment
           "$HOME/miniforge/bin/conda" create -n fresh python=3.8 pyinstaller -y
           "$HOME/miniforge/bin/conda" activate fresh
