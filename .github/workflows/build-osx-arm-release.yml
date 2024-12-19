@@ -123,8 +123,8 @@ jobs:
           # "$HOME/miniforge/bin/pyside6-rcc"
           # echo "TRIAL ONE"
           # pyside6-rcc -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
-          echo "TRIAL TWO"
-          "$HOME/miniforge/bin/pyside6-rcc" -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
+          # echo "TRIAL TWO"
+          "${root}/envs/env-base/bin/pyside6-rcc" -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
           
           ### install env-tensorflow
           $conda_exe env create --file="${root}/EcoAssist/classification_utils/envs/tensorflow-macos-silicon.yml" -p "${root}/envs/env-tensorflow"
