@@ -119,10 +119,10 @@ jobs:
       - name: Append link to release body
         id: append_link
         run: |
-          new_body="${{ env.body }}
+          new_body="$(cat release_body.txt)
   
           [My Link](https://example.com)"
-          echo "new_body=$new_body" >> $GITHUB_ENV
+          echo "$new_body" > new_release_body.txt
   
       - name: Update the release body
         run: |
