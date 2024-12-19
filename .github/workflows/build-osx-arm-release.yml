@@ -31,10 +31,8 @@ jobs:
 
       - name: Zip folder contents
         run: |
-          pushd "$HOME"
-          ls -a
+          cd "$HOME"
           zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist ${{ env.RELEASE_VERSION }}"
-          popd
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
