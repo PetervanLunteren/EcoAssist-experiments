@@ -94,18 +94,8 @@ jobs:
           echo "Uploaded $LATEST_FILE_NAME to GCS at gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"                        # log
           echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"   # url
 
-      # - name: Append pinned URL to release body
-      #   uses: octokit/request-action@v2
-      #   with:
-      #     route: PATCH /repos/${{ github.repository }}/releases/${{ github.event.release.id }}
-      #     release_id: ${{ github.event.release.id }}
-      #     body: |
-      #       ${{ github.event.release.body }}
-      #       ## Downloads
-      #       The MacOS version is available for download at: [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)
-
-      - name: Install GitHub CLI
-        run: brew install gh
+      # - name: Install GitHub CLI
+      #   run: brew install gh
   
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
@@ -120,8 +110,7 @@ jobs:
         id: append_link
         run: |
           new_body="$(cat release_body.txt)
-  
-          [My Link](https://example.com)"
+          - **macOS**: [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)"
           echo "$new_body" > new_release_body.txt
   
       - name: Update the release body
