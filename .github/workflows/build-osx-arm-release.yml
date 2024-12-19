@@ -121,8 +121,8 @@ jobs:
           # make pyside6 # DEBUG
           # /Applications/.EcoAssist_files/miniforge/bin/pyside6-rcc
           # "$HOME/miniforge/bin/pyside6-rcc"
-          echo "TRIAL ONE"
-          pyside6-rcc -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
+          # echo "TRIAL ONE"
+          # pyside6-rcc -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
           echo "TRIAL TWO"
           "$HOME/miniforge/bin/pyside6-rcc" -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
           
