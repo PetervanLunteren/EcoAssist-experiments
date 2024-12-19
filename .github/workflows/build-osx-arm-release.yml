@@ -72,18 +72,19 @@ jobs:
   
       - name: Upload file to GCS (replacing any old files)
         run: |
-          echo "Uploading osx-arm-${RELEASE_VERSION}.zip to /$RELEASE_VERSION/ in bucket $BUCKET_NAME"
+          FOLDER_NAME="${{ env.RELEASE_VERSION }}"
+          BUCKET_NAME="${{ env.BUCKET_NAME }}"
+          FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
+          
+          echo "Uploading $FILE_NAME to /$FOLDER_NAME/ in bucket $BUCKET_NAME"
           
           # Ensure the folder exists by creating a null object
-          gsutil -q stat gs://$BUCKET_NAME/$RELEASE_VERSION/ || gsutil cp /dev/null gs://$BUCKET_NAME/$RELEASE_VERSION/
+          gsutil -q stat gs://$BUCKET_NAME/$FOLDER_NAME/ || gsutil cp /dev/null gs://$BUCKET_NAME/$FOLDER_NAME/
   
           # Upload the file, overwriting any existing file with the same name
-          gsutil cp -r osx-arm-${RELEASE_VERSION}.zip gs://$BUCKET_NAME/$RELEASE_VERSION/
-          echo "File uploaded to GCS at gs://$BUCKET_NAME/$RELEASE_VERSION/osx-arm-${RELEASE_VERSION}.zip"
+          gsutil cp -r $FILE_NAME gs://$BUCKET_NAME/$FOLDER_NAME/
+          echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME/$FILE_NAME"
   
           # Form the public URL
-          PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$RELEASE_VERSION/osx-arm-${RELEASE_VERSION}.zip"
+          PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$FOLDER_NAME/$FILE_NAME"
           echo "File is publicly accessible at: $PUBLIC_URL"
-
-        env:
-          RELEASE_VERSION: ${{ github.event.release.tag_name }}
