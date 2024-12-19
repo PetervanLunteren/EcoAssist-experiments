@@ -33,14 +33,14 @@ jobs:
 
       # - name: Zip folder contents
       #   run: |
-      #     zip -r ${FILE_NAME} "$HOME/EcoAssist"
+      #     zip -r osx-arm-${RELEASE_VERSION}.zip "$HOME/EcoAssist"
 
       # - name: Upload release asset
       #   uses: actions/upload-release-asset@v1
       #   with:
       #     upload_url: ${{ github.event.release.upload_url }}
-      #     asset_path: ./${FILE_NAME}
-      #     asset_name: ${FILE_NAME}
+      #     asset_path: ./osx-arm-${RELEASE_VERSION}.zip
+      #     asset_name: osx-arm-${RELEASE_VERSION}.zip
       #     asset_content_type: application/zip
 
 
@@ -74,15 +74,15 @@ jobs:
   
       - name: Upload file to GCS (replacing any old files)
         run: |
-          echo "Uploading $FILE_NAME to /$RELEASE_VERSION/ in bucket $BUCKET_NAME"
+          echo "Uploading osx-arm-${RELEASE_VERSION}.zip to /$RELEASE_VERSION/ in bucket $BUCKET_NAME"
           
           # Ensure the folder exists by creating a null object
           gsutil -q stat gs://$BUCKET_NAME/$RELEASE_VERSION/ || gsutil cp /dev/null gs://$BUCKET_NAME/$RELEASE_VERSION/
   
           # Upload the file, overwriting any existing file with the same name
-          gsutil cp -r $FILE_NAME gs://$BUCKET_NAME/$RELEASE_VERSION/
-          echo "File uploaded to GCS at gs://$BUCKET_NAME/$RELEASE_VERSION/$FILE_NAME"
+          gsutil cp -r osx-arm-${RELEASE_VERSION}.zip gs://$BUCKET_NAME/$RELEASE_VERSION/
+          echo "File uploaded to GCS at gs://$BUCKET_NAME/$RELEASE_VERSION/osx-arm-${RELEASE_VERSION}.zip"
   
           # Form the public URL
-          PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$RELEASE_VERSION/$FILE_NAME"
+          PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$RELEASE_VERSION/osx-arm-${RELEASE_VERSION}.zip"
           echo "File is publicly accessible at: $PUBLIC_URL"
