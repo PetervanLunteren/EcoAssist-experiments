@@ -8,15 +8,19 @@ import subprocess
 import sys
 import platform
 
-# show info message
-def show_info_message(message):
+# os dependent preparation
+def run_os_dependent_preparation_tasks():
     system = platform.system()
+    msg = "Starting EcoAssist...\n\n"
+          "This may take a few minutes initially as dependencies, environments, and models are loaded.\n\n"
+          "Don't worry – subsequent starts will be faster!"
     if system == 'Windows':
-        subprocess.Popen(['python', '-c', f'import ctypes; ctypes.windll.user32.MessageBoxW(0, "{message}", "Information", 0x40)'])
+        subprocess.Popen(['python', '-c', f'import ctypes; ctypes.windll.user32.MessageBoxW(0, "{msg}", "Information", 0x40)'])
     elif system == 'Darwin':
-        subprocess.Popen(['osascript', '-e', f'display dialog "{message}"'])
+        subprocess.Popen(['osascript', '-e', f'display dialog "{msg}"'])            # show message
+        subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])   # remove attributes
     elif system == 'Linux':
-        subprocess.Popen(['zenity', '--info', '--text', message])
+        subprocess.Popen(['zenity', '--info', '--text', msg])
     else:
         print("Unsupported OS")
         return
@@ -37,18 +41,13 @@ if EcoAssist_files.endswith("main.app/Contents/MacOS"):
 if EcoAssist_files.endswith(".app/Contents/MacOS"):
     EcoAssist_files = os.path.dirname(os.path.dirname(os.path.dirname(EcoAssist_files)))
 
-# remove attributes recursively so user only has to approve one apple warning
-subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])
-
 # init paths    
 GUI_script = os.path.join(EcoAssist_files, "EcoAssist", "EcoAssist_GUI.py")
-first_startup_file = os.path.join(EcoAssist_files, "first_startup.txt")
+first_startup_file = os.path.join(EcoAssist_files, "first-startup.txt")
 
-# show info message
+# prepare
 if os.path.exists(first_startup_file):
-    show_info_message("Starting EcoAssist...\n\n"
-                    "This may take a few minutes initially as dependencies, environments, and models are loaded.\n\n"
-                    "Don't worry – subsequent starts will be faster!")
+    run_os_dependent_preparation_tasks()
 
 # log
 print(f"first_startup_file: {first_startup_file}")
