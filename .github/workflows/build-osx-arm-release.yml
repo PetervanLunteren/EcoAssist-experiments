@@ -17,21 +17,21 @@ jobs:
       - name: checkout repository
         uses: actions/checkout@v3
 
-      # - name: Install Miniconda
-      #   run: |
-      #     mkdir "$HOME/miniforge"
-      #     curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
-      #     bash miniforge.sh -b -u -p "$HOME/miniforge"
-      #     echo "succesfully installed at $HOME/miniforge"
+      - name: Install Miniconda
+        run: |
+          mkdir "$HOME/miniforge"
+          curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
+          bash miniforge.sh -b -u -p "$HOME/miniforge"
+          echo "succesfully installed at $HOME/miniforge"
       
-      # - name: Run installation script
-      #   run: |
-      #     chmod +x ./shell/install-osx-arm.sh
-      #     ./shell/install-osx-arm.sh
+      - name: Run installation script
+        run: |
+          chmod +x ./shell/install-osx-arm.sh
+          ./shell/install-osx-arm.sh
 
-      # - name: Zip folder contents
-      #   run: |
-      #     zip -r osx-arm-${RELEASE_VERSION}.zip "$HOME/EcoAssist"
+      - name: Zip folder contents
+        run: |
+          zip -r osx-arm-${{ env.RELEASE_VERSION }}.zip "$HOME/EcoAssist"
 
       # - name: Upload release asset
       #   uses: actions/upload-release-asset@v1
@@ -42,23 +42,23 @@ jobs:
       #     asset_content_type: application/zip
 
 
-  # DEBUG
-      - name: Clone a public GitHub repository
-        run: |
-          # DEBUG
-          git clone https://github.com/octocat/hello-world.git
-          echo "Repository cloned!"
-  # DEBUG
+  # # DEBUG
+  #     - name: Clone a public GitHub repository
+  #       run: |
+  #         # DEBUG
+  #         git clone https://github.com/octocat/hello-world.git
+  #         echo "Repository cloned!"
+  # # DEBUG
 
 
-  # DEBUG
-      - name: Zip the cloned repository
-        run: |
-          # DEBUG
-          FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
-          zip -r $FILE_NAME hello-world/
-          echo "Repository zipped!"
-  # DEBUG
+  # # DEBUG
+  #     - name: Zip the cloned repository
+  #       run: |
+  #         # DEBUG
+  #         FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
+  #         zip -r $FILE_NAME hello-world/
+  #         echo "Repository zipped!"
+  # # DEBUG
 
 
       - name: Authenticate with Google Cloud
@@ -93,9 +93,6 @@ jobs:
           gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME                                     # upload file
           echo "Uploaded $LATEST_FILE_NAME to GCS at gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"                        # log
           echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"   # url
-
-      # - name: Install GitHub CLI
-      #   run: brew install gh
   
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
@@ -110,7 +107,7 @@ jobs:
         id: append_link
         run: |
           new_body="$(cat release_body.txt)
-          - **macOS**: [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)"
+          - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)"
           echo "$new_body" > new_release_body.txt
   
       - name: Update the release body
