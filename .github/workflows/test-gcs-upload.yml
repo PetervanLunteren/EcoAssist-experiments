@@ -34,21 +34,27 @@ jobs:
       with:
         project_id: github-file-storage
 
-    - name: Create folder in GCS (if not exists) and upload zip
+    - name: Upload file to GCS (replacing any old files)
       run: |
         FOLDER_NAME="v5.21/"
         BUCKET_NAME="github-release-files-storage"
+        FILE_NAME="osx-arm-v5.21.zip"
 
-        # Create a folder-like object in GCS
-        echo "Ensuring folder $FOLDER_NAME exists in bucket $BUCKET_NAME"
+        echo "Uploading $FILE_NAME to $FOLDER_NAME in bucket $BUCKET_NAME"
+        
+        # Ensure the folder exists by creating a null object
         gsutil -q stat gs://$BUCKET_NAME/$FOLDER_NAME || gsutil cp /dev/null gs://$BUCKET_NAME/$FOLDER_NAME
 
-        # Upload the zip file to the folder
-        echo "Uploading file to $FOLDER_NAME"
-        gsutil cp osx-arm-v5.21.zip gs://$BUCKET_NAME/$FOLDER_NAME
-        echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME"
+        # Upload the file, overwriting any existing file with the same name
+        gsutil cp -r $FILE_NAME gs://$BUCKET_NAME/$FOLDER_NAME
+        echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME$FILE_NAME"
 
-        # Delete the null object representing the folder
-        echo "Cleaning up null object for folder $FOLDER_NAME in bucket $BUCKET_NAME"
-        gsutil rm gs://$BUCKET_NAME/$FOLDER_NAME
-        echo "Null object removed from GCS!"
+        # Check and remove null object to clean up (ensure prefix exists for the folder-like structure)
+        NULL_OBJECT_PATH="gs://$BUCKET_NAME/$FOLDER_NAME"
+        gsutil ls $NULL_OBJECT_PATH > /tmp/objects_list.txt
+        if grep -q "$NULL_OBJECT_PATH$" /tmp/objects_list.txt; then
+          echo "Null object exists. Removing..."
+          gsutil rm "$NULL_OBJECT_PATH"
+        else
+          echo "No null object found. Skipping cleanup."
+        fi
