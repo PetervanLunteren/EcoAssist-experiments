@@ -48,13 +48,3 @@ jobs:
         # Upload the file, overwriting any existing file with the same name
         gsutil cp -r $FILE_NAME gs://$BUCKET_NAME/$FOLDER_NAME
         echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME$FILE_NAME"
-
-        # Check and remove null object to clean up (ensure prefix exists for the folder-like structure)
-        NULL_OBJECT_PATH="gs://$BUCKET_NAME/$FOLDER_NAME"
-        gsutil ls $NULL_OBJECT_PATH > /tmp/objects_list.txt
-        if grep -q "$NULL_OBJECT_PATH$" /tmp/objects_list.txt; then
-          echo "Null object exists. Removing..."
-          gsutil rm "$NULL_OBJECT_PATH"
-        else
-          echo "No null object found. Skipping cleanup."
-        fi
