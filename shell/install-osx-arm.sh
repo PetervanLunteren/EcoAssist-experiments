@@ -119,6 +119,7 @@ $conda_exe create -p "${root}/envs/env-debug" python=3.8 -y
 
 ### rename folder
 mv "${root}" "$HOME/EcoAssist ${RELEASE_VERSION}"
+echo "Renamed folder ${root} to $HOME/EcoAssist ${RELEASE_VERSION}"
 
 # # create fresh pyinstaller environment
 # $conda_exe create -n fresh python=3.8 pyinstaller -y
