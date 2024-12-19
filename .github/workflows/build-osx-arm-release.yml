@@ -23,14 +23,25 @@ jobs:
           curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
           bash miniforge.sh -b -u -p "$HOME/miniforge"
           echo "succesfully installed at $HOME/miniforge"
-      
-      # - name: Run installation script
-      #   run: |
-      #     chmod +x ./shell/install-osx-arm.sh
-      #     ./shell/install-osx-arm.sh
+
+      - name: Create conda env and install Pyinstaller
+        run: |
+          # Create fresh pyinstaller environment
+          $conda_exe create -n fresh python=3.8 pyinstaller -y
+          $conda_exe activate fresh
+
+          # # Build the .app file
+          # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
+
+          # # Move and rename executables to EcoAssist
+          # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
+
+          # Deactivate the Conda environment
+          $conda_exe deactivate
 
       - name: Install dependencies
         run: |
+        
           ### refresh root
           root="$HOME/EcoAssist"
           if [ -d "${root}" ]; then
@@ -147,21 +158,22 @@ jobs:
           ### rename folder
           mv "${root}" "$HOME/EcoAssist ${RELEASE_VERSION}"
           echo "Renamed folder ${root} to $HOME/EcoAssist ${RELEASE_VERSION}"
-          
-          # # create fresh pyinstaller environment
-          # $conda_exe create -n fresh python=3.8 pyinstaller -y
-          # $conda_exe activate fresh
-          # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
-          # $conda_exe deactivate
-          
-          # clean
+         
+          ### clean
           $conda_exe clean --all --yes --force-pkgs-dirs
           $conda_exe clean --all --yes
-          
-          # # move and rename executables to EcoAssist
-          # mv "${HOME}/dist/main" "${root}/debug_mode"
-          # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
 
+      # - name: Create conda env and install Pyinstaller
+
+      #     # # create fresh pyinstaller environment
+      #     # $conda_exe create -n fresh python=3.8 pyinstaller -y
+      #     # $conda_exe activate fresh
+      #     # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
+      #     # $conda_exe deactivate
+
+      #     # # move and rename executables to EcoAssist
+      #     # mv "${HOME}/dist/main" "${root}/debug_mode"
+      #     # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
 
       - name: Zip folder contents
         run: |
