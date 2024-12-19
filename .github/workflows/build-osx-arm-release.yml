@@ -12,8 +12,6 @@ jobs:
     env:
       RELEASE_VERSION: ${{ github.event.release.tag_name }}
       BUCKET_NAME: github-release-files-storage
-      FILE_NAME: osx-arm-${RELEASE_VERSION}.zip
-
     
     steps:
       - name: checkout repository
@@ -86,3 +84,6 @@ jobs:
           # Form the public URL
           PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$RELEASE_VERSION/osx-arm-${RELEASE_VERSION}.zip"
           echo "File is publicly accessible at: $PUBLIC_URL"
+
+        env:
+          RELEASE_VERSION: ${{ github.event.release.tag_name }}
