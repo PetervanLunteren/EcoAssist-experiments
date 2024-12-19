@@ -55,7 +55,8 @@ jobs:
       - name: Zip the cloned repository
         run: |
           # DEBUG
-          zip -r osx-arm-v5.21.zip hello-world/
+          FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
+          zip -r $FILE_NAME hello-world/
           echo "Repository zipped!"
   # DEBUG
 
