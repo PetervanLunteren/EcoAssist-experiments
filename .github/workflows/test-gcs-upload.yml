@@ -48,3 +48,7 @@ jobs:
         # Upload the file, overwriting any existing file with the same name
         gsutil cp -r $FILE_NAME gs://$BUCKET_NAME/$FOLDER_NAME
         echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME$FILE_NAME"
+
+        # Form the public URL
+        PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$FOLDER_NAME/$FILE_NAME"
+        echo "File is publicly accessible at: $PUBLIC_URL"
