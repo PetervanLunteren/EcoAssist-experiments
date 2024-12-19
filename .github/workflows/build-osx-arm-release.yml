@@ -14,7 +14,7 @@ jobs:
       BUCKET_NAME: github-release-files-storage
     
     steps:
-      - name: checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Install Miniconda
@@ -33,48 +33,20 @@ jobs:
         run: |
           pushd "$HOME"
           ls -a
-          zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist ${{ env.RELEASE_VERSION }}/*"
+          zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist ${{ env.RELEASE_VERSION }}"
           popd
-
-      # - name: Upload release asset
-      #   uses: actions/upload-release-asset@v1
-      #   with:
-      #     upload_url: ${{ github.event.release.upload_url }}
-      #     asset_path: ./osx-arm-${RELEASE_VERSION}.zip
-      #     asset_name: osx-arm-${RELEASE_VERSION}.zip
-      #     asset_content_type: application/zip
-
-
-  # # DEBUG
-  #     - name: Clone a public GitHub repository
-  #       run: |
-  #         # DEBUG
-  #         git clone https://github.com/octocat/hello-world.git
-  #         echo "Repository cloned!"
-  # # DEBUG
-
-
-  # # DEBUG
-  #     - name: Zip the cloned repository
-  #       run: |
-  #         # DEBUG
-  #         FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
-  #         zip -r $FILE_NAME hello-world/
-  #         echo "Repository zipped!"
-  # # DEBUG
-
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
   
-      - name: Set up Google Cloud SDK
+      - name: Set up Google Cloud
         uses: google-github-actions/setup-gcloud@v1
         with:
           project_id: github-file-storage
   
-      - name: Upload file to GCS (replacing any old files)
+      - name: Upload files to Google Cloud
         run: |
           # init vars
           BUCKET_NAME="${{ env.BUCKET_NAME }}"
