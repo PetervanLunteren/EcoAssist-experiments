@@ -108,22 +108,22 @@ jobs:
         run: brew install gh
   
       - name: Authenticate GitHub CLI
-        run: gh auth login --with-token <<< "${{ secrets.GITHUB_TOKEN }}"
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
   
       - name: Get the release body
         id: get_release
         run: |
           release=$(gh release view ${{ github.ref_name }} --json body -q .body)
-          echo "::set-output name=body::$release"
+          echo "body=$release" >> $GITHUB_ENV
   
       - name: Append link to release body
         id: append_link
         run: |
-          new_body="${{ steps.get_release.outputs.body }}
+          new_body="${{ env.body }}
   
           [My Link](https://example.com)"
-          echo "::set-output name=new_body::$new_body"
+          echo "new_body=$new_body" >> $GITHUB_ENV
   
       - name: Update the release body
         run: |
-          gh release edit ${{ github.ref_name }} --notes "${{ steps.append_link.outputs.new_body }}"
+          gh release edit ${{ github.ref_name }} --notes "${{ env.new_body }}"
