@@ -80,17 +80,17 @@ jobs:
           PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
           LATEST_FILE_NAME="osx-arm-latest.zip"
 
-          # upload release pinned version
-          echo "Uploading $PINNED_FILE_NAME to /$FOLDER_NAME/ in bucket $BUCKET_NAME"                                         # log
-          gsutil -q stat gs://$BUCKET_NAME/$FOLDER_NAME/ || gsutil cp /dev/null gs://$BUCKET_NAME/$FOLDER_NAME/               # create folder
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$FOLDER_NAME/$PINNED_FILE_NAME                                     # upload file
-          echo "Uploaded $PINNED_FILE_NAME to GCS at gs://$BUCKET_NAME/$FOLDER_NAME/$PINNED_FILE_NAME"                        # log
-          echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$FOLDER_NAME/$PINNED_FILE_NAME"   # url
+          # release pinned version
+          echo "Uploading $PINNED_FILE_NAME to /$PINNED_FOLDER_NAME/ in bucket $BUCKET_NAME"                                         # log
+          gsutil -q stat gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/ || gsutil cp /dev/null gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/        # create folder
+          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME                                     # upload file
+          echo "Uploaded $PINNED_FILE_NAME to GCS at gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME"                        # log
+          echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME"   # url
 
-          # upload latest release version
-          echo "Uploading $LATEST_FILE_NAME to /latest/ in bucket $BUCKET_NAME"                                               # log
-          gsutil -q stat gs://$BUCKET_NAME/latest/ || gsutil cp /dev/null gs://$BUCKET_NAME/latest/                           # create folder 
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$FOLDER_NAME/$LATEST_FILE_NAME                                     # upload file
-          echo "Uploaded $LATEST_FILE_NAME to GCS at gs://$BUCKET_NAME/$FOLDER_NAME/$LATEST_FILE_NAME"                        # log
-          echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$FOLDER_NAME/$PINNED_FILE_NAME"   # log
+          # latest release version
+          echo "Uploading $LATEST_FILE_NAME to /$LATEST_FOLDER_NAME/ in bucket $BUCKET_NAME"                                         # log
+          gsutil -q stat gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/ || gsutil cp /dev/null gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/        # create folder 
+          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME                                     # upload file
+          echo "Uploaded $LATEST_FILE_NAME to GCS at gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"                        # log
+          echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"   # url
   
