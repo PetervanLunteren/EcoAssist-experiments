@@ -48,4 +48,7 @@ jobs:
         gsutil cp osx-arm-v5.21.zip gs://$BUCKET_NAME/$FOLDER_NAME
         echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME"
 
-        
+        # Delete the null object representing the folder
+        echo "Cleaning up null object for folder $FOLDER_NAME in bucket $BUCKET_NAME"
+        gsutil rm gs://$BUCKET_NAME/$FOLDER_NAME
+        echo "Null object removed from GCS!"
