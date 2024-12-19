@@ -24,26 +24,26 @@ jobs:
           bash miniforge.sh -b -u -p "$HOME/miniforge"
           echo "succesfully installed at $HOME/miniforge"
 
-      - name: Create conda env and install Pyinstaller
-        run: |
+      # - name: Create conda env and install Pyinstaller
+      #   run: |
 
-          # Initialize conda in the shell
-          source "$HOME/miniforge/etc/profile.d/conda.sh"
-          conda init bash  # This initializes conda for bash
-          source "$HOME/miniforge/etc/profile.d/conda.sh"  # Re-source after init to apply changes
+      #     # Initialize conda in the shell
+      #     source "$HOME/miniforge/etc/profile.d/conda.sh"
+      #     conda init bash  # This initializes conda for bash
+      #     source "$HOME/miniforge/etc/profile.d/conda.sh"  # Re-source after init to apply changes
           
-          # Create fresh pyinstaller environment
-          "$HOME/miniforge/bin/conda" create -n fresh python=3.8 pyinstaller -y
-          "$HOME/miniforge/bin/conda" activate fresh
+      #     # Create fresh pyinstaller environment
+      #     "$HOME/miniforge/bin/conda" create -n fresh python=3.8 pyinstaller -y
+      #     "$HOME/miniforge/bin/conda" activate fresh
 
-          # # Build the .app file
-          # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
+      #     # # Build the .app file
+      #     # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
 
-          # # Move and rename executables to EcoAssist
-          # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
+      #     # # Move and rename executables to EcoAssist
+      #     # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
 
-          # Deactivate the Conda environment
-          "$HOME/miniforge/bin/conda" deactivate
+      #     # Deactivate the Conda environment
+      #     "$HOME/miniforge/bin/conda" deactivate
 
       - name: Install dependencies
         run: |
@@ -164,22 +164,18 @@ jobs:
           ### rename folder
           mv "${root}" "$HOME/EcoAssist ${RELEASE_VERSION}"
           echo "Renamed folder ${root} to $HOME/EcoAssist ${RELEASE_VERSION}"
+
+          ### run pyinstaller from fresh environment
+          $conda_exe create -p "$HOME/miniforge/envs/env-fresh" python=3.8 pyinstaller -y
+          $conda_exe run -p "$HOME/miniforge/envs/env-fresh" pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
          
           ### clean
           $conda_exe clean --all --yes --force-pkgs-dirs
           $conda_exe clean --all --yes
 
-      # - name: Create conda env and install Pyinstaller
-
-      #     # # create fresh pyinstaller environment
-      #     # $conda_exe create -n fresh python=3.8 pyinstaller -y
-      #     # $conda_exe activate fresh
-      #     # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
-      #     # $conda_exe deactivate
-
-      #     # # move and rename executables to EcoAssist
-      #     # mv "${HOME}/dist/main" "${root}/debug_mode"
-      #     # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
+          ### move and rename executables
+          mv "${HOME}/dist/main" "${root}/debug_mode"
+          mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
 
       - name: Zip folder contents
         run: |
