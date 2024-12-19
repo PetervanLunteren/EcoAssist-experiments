@@ -8,33 +8,81 @@ on:
 jobs:
   build-and-zip:
     runs-on: macos-15
+
+    env:
+      RELEASE_VERSION: ${{ github.event.release.tag_name }}
+      BUCKET_NAME: github-release-files-storage
+      FILE_NAME: osx-arm-${RELEASE_VERSION}.zip
+
+    
     steps:
       - name: checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Miniconda
-        run: |
-          mkdir "$HOME/miniforge"
-          curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
-          bash miniforge.sh -b -u -p "$HOME/miniforge"
-          echo "succesfully installed at $HOME/miniforge"
+      # - name: Install Miniconda
+      #   run: |
+      #     mkdir "$HOME/miniforge"
+      #     curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
+      #     bash miniforge.sh -b -u -p "$HOME/miniforge"
+      #     echo "succesfully installed at $HOME/miniforge"
       
-      - name: run installation script
-        run: |
-          chmod +x ./shell/install-osx-arm.sh
-          ./shell/install-osx-arm.sh
-        env:
-          RELEASE_VERSION: ${{ github.event.release.tag_name }}
+      # - name: Run installation script
+      #   run: |
+      #     chmod +x ./shell/install-osx-arm.sh
+      #     ./shell/install-osx-arm.sh
 
-      - name: zip folder contents
-        run: |
-          version=${{ github.event.release.tag_name }}
-          zip -r osx-arm-${version}.zip "$HOME/EcoAssist"
+      # - name: Zip folder contents
+      #   run: |
+      #     zip -r ${FILE_NAME} "$HOME/EcoAssist"
 
-      - name: upload release asset
-        uses: actions/upload-release-asset@v1
+      # - name: Upload release asset
+      #   uses: actions/upload-release-asset@v1
+      #   with:
+      #     upload_url: ${{ github.event.release.upload_url }}
+      #     asset_path: ./${FILE_NAME}
+      #     asset_name: ${FILE_NAME}
+      #     asset_content_type: application/zip
+
+
+  # DEBUG
+      - name: Clone a public GitHub repository
+        run: |
+          # DEBUG
+          git clone https://github.com/octocat/hello-world.git
+          echo "Repository cloned!"
+  # DEBUG
+
+
+  # DEBUG
+      - name: Zip the cloned repository
+        run: |
+          # DEBUG
+          zip -r osx-arm-v5.21.zip hello-world/
+          echo "Repository zipped!"
+  # DEBUG
+
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
         with:
-          upload_url: ${{ github.event.release.upload_url }}
-          asset_path: ./osx-arm-${{ github.event.release.tag_name }}.zip
-          asset_name: osx-arm-${{ github.event.release.tag_name }}.zip
-          asset_content_type: application/zip
+          credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
+  
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: github-file-storage
+  
+      - name: Upload file to GCS (replacing any old files)
+        run: |
+          echo "Uploading $FILE_NAME to /$RELEASE_VERSION/ in bucket $BUCKET_NAME"
+          
+          # Ensure the folder exists by creating a null object
+          gsutil -q stat gs://$BUCKET_NAME/$RELEASE_VERSION/ || gsutil cp /dev/null gs://$BUCKET_NAME/$RELEASE_VERSION/
+  
+          # Upload the file, overwriting any existing file with the same name
+          gsutil cp -r $FILE_NAME gs://$BUCKET_NAME/$RELEASE_VERSION/
+          echo "File uploaded to GCS at gs://$BUCKET_NAME/$RELEASE_VERSION/$FILE_NAME"
+  
+          # Form the public URL
+          PUBLIC_URL="https://storage.googleapis.com/$BUCKET_NAME/$RELEASE_VERSION/$FILE_NAME"
+          echo "File is publicly accessible at: $PUBLIC_URL"
