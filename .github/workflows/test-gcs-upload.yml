@@ -21,7 +21,7 @@ jobs:
 
     - name: Zip the cloned repository
       run: |
-        zip -r hello-world.zip hello-world/
+        zip -r osx-arm-v5.21.zip hello-world/
         echo "Repository zipped!"
 
     - name: Authenticate with Google Cloud
@@ -34,7 +34,18 @@ jobs:
       with:
         project_id: github-file-storage
 
-    - name: Upload zip to GCS
+    - name: Create folder in GCS (if not exists) and upload zip
       run: |
-        gsutil cp hello-world.zip gs://github-release-files-storage/
-        echo "File uploaded to GCS!"
+        FOLDER_NAME="v5.21/"
+        BUCKET_NAME="github-release-files-storage"
+
+        # Create a folder-like object in GCS
+        echo "Ensuring folder $FOLDER_NAME exists in bucket $BUCKET_NAME"
+        gsutil -q stat gs://$BUCKET_NAME/$FOLDER_NAME || gsutil cp /dev/null gs://$BUCKET_NAME/$FOLDER_NAME
+
+        # Upload the zip file to the folder
+        echo "Uploading file to $FOLDER_NAME"
+        gsutil cp osx-arm-v5.21.zip gs://$BUCKET_NAME/$FOLDER_NAME
+        echo "File uploaded to GCS at gs://$BUCKET_NAME/$FOLDER_NAME"
+
+        
