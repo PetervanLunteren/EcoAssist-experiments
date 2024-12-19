@@ -46,6 +46,8 @@ jobs:
   
       - name: Upload files to Google Cloud
         run: |
+          cd "$HOME"
+          
           # init vars
           BUCKET_NAME="${{ env.BUCKET_NAME }}"
           PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
