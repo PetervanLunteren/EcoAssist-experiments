@@ -160,10 +160,6 @@ jobs:
           # $conda_exe run -p "${root}/envs/env-pywildlife" pip install pytorchwildlife
           # $conda_exe run -p "${root}/envs/env-pywildlife" pip install "setuptools<70"
           # $conda_exe run -p "${root}/envs/env-pywildlife" pip install jsonpickle
-          
-          ### rename folder
-          mv "${root}" "$HOME/EcoAssist ${RELEASE_VERSION}"
-          echo "Renamed folder ${root} to $HOME/EcoAssist ${RELEASE_VERSION}"
 
           ### run pyinstaller from fresh environment
           $conda_exe create -p "$HOME/miniforge/envs/env-fresh" python=3.8 pyinstaller -y
@@ -176,6 +172,10 @@ jobs:
           ### move and rename executables
           mv "${HOME}/dist/main" "${root}/debug_mode"
           mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
+
+          ### rename folder
+          mv "${root}" "$HOME/EcoAssist ${RELEASE_VERSION}"
+          echo "Renamed folder ${root} to $HOME/EcoAssist ${RELEASE_VERSION}"
 
       - name: Zip folder contents
         run: |
