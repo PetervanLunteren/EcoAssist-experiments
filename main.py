@@ -37,6 +37,9 @@ if EcoAssist_files.endswith("main.app/Contents/MacOS"):
 if EcoAssist_files.endswith(".app/Contents/MacOS"):
     EcoAssist_files = os.path.dirname(os.path.dirname(os.path.dirname(EcoAssist_files)))
 
+# remove attributes recursively so user only has to approve one apple warning
+subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])
+
 # init paths    
 GUI_script = os.path.join(EcoAssist_files, "EcoAssist", "EcoAssist_GUI.py")
 first_startup_file = os.path.join(EcoAssist_files, "first_startup.txt")
@@ -48,10 +51,11 @@ if os.path.exists(first_startup_file):
                     "Don't worry – subsequent starts will be faster!")
 
 # log
-print(f"  EcoAssist_files: {EcoAssist_files}")
-print(f"   sys.executable: {sys.executable}")
-print(f"       GUI_script: {GUI_script}")
+print(f"first_startup_file: {first_startup_file}")
+print(f"   EcoAssist_files: {EcoAssist_files}")
+print(f"    sys.executable: {sys.executable}")
+print(f"        GUI_script: {GUI_script}")
 
 # run the GUI script
-print("Running GUI script...")
+print("Opening...")
 subprocess.run([get_python_interprator("base"), GUI_script])
