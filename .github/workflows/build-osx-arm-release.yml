@@ -27,8 +27,8 @@ jobs:
       - name: Create conda env and install Pyinstaller
         run: |
           # Create fresh pyinstaller environment
-          $conda_exe create -n fresh python=3.8 pyinstaller -y
-          $conda_exe activate fresh
+          "$HOME/miniforge/bin/conda" create -n fresh python=3.8 pyinstaller -y
+          "$HOME/miniforge/bin/conda" activate fresh
 
           # # Build the .app file
           # pyinstaller --onefile --windowed --icon="${root}/EcoAssist/imgs/logo_small_bg.icns" --distpath="${HOME}/dist" --workpath="${HOME}/build" "${root}/main.py"
@@ -37,7 +37,7 @@ jobs:
           # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
 
           # Deactivate the Conda environment
-          $conda_exe deactivate
+          "$HOME/miniforge/bin/conda" deactivate
 
       - name: Install dependencies
         run: |
