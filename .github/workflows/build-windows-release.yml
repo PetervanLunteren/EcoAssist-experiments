@@ -4,6 +4,7 @@ on:
   release:
     types:
       - published
+  workflow_dispatch:
 
 jobs:
   build-windows-release:
@@ -16,6 +17,14 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Check miniconda install
+        run: |
+          echo CONDA DIR IS -> %CONDA%
+
+      - name: try miniconda install
+        run: |
+          
 
       # - name: Install Miniconda MINICONDA IS PRE INSTALLED BUT NOT ADDED TO THE PATH
       #   run: |
