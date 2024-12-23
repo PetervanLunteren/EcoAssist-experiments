@@ -17,13 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Miniconda
-        run: |
-          mkdir %USERPROFILE%\miniforge
-          curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Windows-x86_64.exe" -o miniforge.exe
-          start /wait miniforge.exe /S /D=%USERPROFILE%\miniforge
-          setx PATH "%USERPROFILE%\miniforge;%USERPROFILE%\miniforge\condabin;%PATH%"
-          conda --version
+      # - name: Install Miniconda MINICONDA IS PRE INSTALLED BUT NOT ADDED TO THE PATH
+      #   run: |
+      #     mkdir %USERPROFILE%\miniforge
+      #     curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Windows-x86_64.exe" -o miniforge.exe
+      #     start /wait miniforge.exe /S /D=%USERPROFILE%\miniforge
+      #     setx PATH "%USERPROFILE%\miniforge;%USERPROFILE%\miniforge\condabin;%PATH%"
+      #     conda --version
 
       - name: Set up environment and dependencies
         run: |
