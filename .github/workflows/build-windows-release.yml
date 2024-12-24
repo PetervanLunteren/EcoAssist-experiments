@@ -23,11 +23,120 @@ jobs:
         run: |
           echo "CONDA DIR IS -> ${{ env.CONDA_DIR }}"
 
-      - name: try miniconda install
+      - name: Install dependencies
         shell: cmd
         run: |
+
+          echo off
+          @setlocal EnableDelayedExpansion
+          
+          @REM init environment vars
+          set root=%USERPROFILE%\EcoAssist
           set conda_exe=${{ env.CONDA_DIR }}\Scripts\conda.exe
-          "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
+          echo Using conda %conda_exe%
+          
+          @REM refresh dir
+          if exist "%root%" (
+              rmdir /s /q "%root%"
+              echo %root% folder removed
+          )
+          
+          @REM create folder structure
+          mkdir "%root%"
+          mkdir "%root%\envs"
+          mkdir "%root%\models"
+          mkdir "%root%\models\det"
+          mkdir "%root%\models\cls"
+          mkdir "%root%\models\det\MegaDetector 5a"
+          mkdir "%root%\yolov5_versions\yolov5_old"
+          mkdir "%root%\yolov5_versions\yolov5_new"
+          echo Hello world! > "%root%\first-startup.txt"
+          
+          @REM EcoAssist
+          git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "%root%\EcoAssist"
+          rmdir /s /q "%root%\EcoAssist\.git"
+          move "%root%\EcoAssist\main.py" "%root%\main.py"
+          echo EcoAssist cloned
+          
+          @REM MegaDetector
+          git clone https://github.com/agentmorris/MegaDetector.git "%root%\cameratraps"
+          pushd "%root%\cameratraps"
+          git checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
+          popd
+          rmdir /s /q "%root%\cameratraps\.git"
+          echo MegaDetector cloned
+          
+          @REM YOLOv5 old
+          git clone https://github.com/ultralytics/yolov5.git "%root%\yolov5_versions\yolov5_old\yolov5"
+          pushd "%root%\yolov5_versions\yolov5_old\yolov5"
+          git checkout c23a441c9df7ca9b1f275e8c8719c949269160d1
+          popd
+          rmdir /s /q "%root%\yolov5_versions\yolov5_old\yolov5\.git"
+          echo YOLOv5 old cloned
+          
+          @REM YOLOv5 new
+          git clone https://github.com/ultralytics/yolov5.git "%root%\yolov5_versions\yolov5_new\yolov5"
+          pushd "%root%\yolov5_versions\yolov5_new\yolov5"
+          git checkout 3e55763d45f9c5f8217e4dad5ba1e6c1f42e3bf8
+          popd
+          rmdir /s /q "%root%\yolov5_versions\yolov5_new\yolov5\.git"
+          echo YOLOv5 new cloned
+          
+          @REM Human in the loop
+          git clone --depth 1 https://github.com/PetervanLunteren/Human-in-the-loop.git "%root%\Human-in-the-loop"
+          rmdir /s /q "%root%\Human-in-the-loop\.git"
+          echo Human-in-the-loop cloned
+          
+          @REM Visualise detections
+          git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
+          rmdir /s /q "%root%\visualise_detection\.git"
+          echo visualise_detection cloned
+          
+          @REM MegaDetector model 5A
+          curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
+          
+          @REM env-base
+          call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision torchaudio -y 
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchaudio==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+          
+          @REM env-pytorch
+          call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
+          
+          @REM env-tensorflow
+          call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
+          
+          @REM install PyInstaller
+          call "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
+          
+          @REM normal executable
+          call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --noconsole --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+          move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION%.exe"
+          
+          @REM debug executable
+          call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --console --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+          move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION% debug.exe"
+          
+          @REM conda clean
+          call "%conda_exe%" clean --all --yes --force-pkgs-dirs
+          call "%conda_exe%" clean --all --yes
 
 
       # - name: Install Miniconda MINICONDA IS PRE INSTALLED BUT NOT ADDED TO THE PATH
