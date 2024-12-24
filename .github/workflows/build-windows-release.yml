@@ -219,10 +219,20 @@ jobs:
 
       - name: Update the release body
         shell: cmd
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           @echo off
           set RELEASE_NAME=${{ github.ref_name }}
-          set NEW_RELEASE_BODY=
-          for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
-          echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
+          gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
 
+      # - name: Update the release body
+      #   shell: cmd
+      #   run: |
+      #     @echo off
+      #     set RELEASE_NAME=${{ github.ref_name }}
+      #     set NEW_RELEASE_BODY=
+      #     for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
+      #     echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
+
+  
