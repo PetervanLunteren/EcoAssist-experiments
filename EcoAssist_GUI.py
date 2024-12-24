@@ -1925,7 +1925,7 @@ def open_annotation_windows(recognition_file, class_list_txt, file_list_txt, lab
 
 # os dependent python executables
 def get_python_interprator(env_name):
-    if system == 'Windows':
+    if platform.system() == 'Windows':
         return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "python.exe")
     else:
         return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "bin", "python")
