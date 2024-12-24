@@ -218,19 +218,29 @@ jobs:
           echo %NEW_LINK% >> new_release_body.txt
 
       - name: Update the release body
-        shell: cmd
+        shell: pwsh
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          @echo off
-          setlocal enabledelayedexpansion
-          set RELEASE_NAME=${{ github.ref_name }}
-          set RELEASE_BODY=
-          for /f "delims=" %%A in (new_release_body.txt) do (
-              set RELEASE_BODY=!RELEASE_BODY!%%A
-          )
-          echo !RELEASE_BODY! > final_release_body.txt
-          gh release edit %RELEASE_NAME% --notes-file final_release_body.txt
+          # Set the release name
+          $ReleaseName = "${{ github.ref_name }}"
+          
+          # Initialize the release body as an empty string
+          $ReleaseBody = ""
+      
+          # Read the content of the new_release_body.txt and append to the ReleaseBody
+          Get-Content "new_release_body.txt" | ForEach-Object {
+            $ReleaseBody += $_
+          }
+      
+          # Append the new link for the macOS install
+          $ReleaseBody += "`n- Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)"
+      
+          # Save the updated release body to a file
+          $ReleaseBody | Out-File -FilePath "final_release_body.txt"
+      
+          # Update the release with the new body
+          gh release edit $ReleaseName --notes-file "final_release_body.txt"
 
       # - name: Update the release body
       #   shell: cmd
