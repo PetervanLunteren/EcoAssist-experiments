@@ -20,7 +20,7 @@ jobs:
 
       - name: Check miniconda install
         run: |
-          echo CONDA DIR IS -> %CONDA%
+          echo "CONDA DIR IS -> $env:CONDA"
 
       - name: try miniconda install
         run: |
