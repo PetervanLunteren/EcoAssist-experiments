@@ -191,14 +191,13 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          @REM Authenticate GitHub CLI using the GitHub token
-          echo %GITHUB_TOKEN% | gh auth login --with-token
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
       - name: Get the release body
         shell: cmd
         run: |
           @echo off
-          set RELEASE_NAME=%GITHUB_REF_NAME%
+          set RELEASE_NAME=${{ github.ref_name }}
           for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
           echo %RELEASE_BODY% > release_body.txt
 
