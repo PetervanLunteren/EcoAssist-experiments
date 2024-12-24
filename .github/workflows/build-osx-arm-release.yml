@@ -187,19 +187,11 @@ jobs:
           PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
           LATEST_FILE_NAME="osx-arm-latest.zip"
 
-          # release pinned version
-          # echo "Uploading $PINNED_FILE_NAME to /$PINNED_FOLDER_NAME/ in bucket $BUCKET_NAME"                                         # log
-          # gsutil -q stat gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/ || gsutil cp /dev/null gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/        # create folder # DEBUG
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME                                     # upload file
-          # echo "Uploaded $PINNED_FILE_NAME to GCS at gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME"                        # log
-          # echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME"   # url
+          # upload release pinned version
+          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
 
-          # latest release version
-          # echo "Uploading $LATEST_FILE_NAME to /$LATEST_FOLDER_NAME/ in bucket $BUCKET_NAME"                                         # log
-          # gsutil -q stat gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/ || gsutil cp /dev/null gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/        # create folder  # DEBUG
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME                                     # upload file
-          # echo "Uploaded $LATEST_FILE_NAME to GCS at gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"                        # log
-          # echo "File is publicly accessible at: https://storage.googleapis.com/$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME"   # url
+          # upload latest release version
+          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
   
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
