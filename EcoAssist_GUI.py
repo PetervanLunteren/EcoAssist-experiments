@@ -140,11 +140,13 @@ PIL_run_image = PIL.Image.open(os.path.join(EcoAssist_files, "EcoAssist", "imgs"
 launch_count_file = os.path.join(EcoAssist_files, 'launch_count.json')
 
 # insert dependencies to system variables
+cuda_toolkit_path = os.environ.get("CUDA_HOME") or os.environ.get("CUDA_PATH")
 paths_to_add = [
     os.path.join(EcoAssist_files),
     os.path.join(EcoAssist_files, "cameratraps"),
     os.path.join(EcoAssist_files, "cameratraps", "megadetector"),
-    os.path.join(EcoAssist_files, "EcoAssist")
+    os.path.join(EcoAssist_files, "EcoAssist"),
+    os.path.join(cuda_toolkit_path, "bin")
 ]
 for path in paths_to_add:
     sys.path.insert(0, path)
