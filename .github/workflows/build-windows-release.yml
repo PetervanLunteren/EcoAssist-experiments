@@ -175,11 +175,7 @@ jobs:
           set LATEST_FOLDER_NAME=latest
           set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
           set LATEST_FILE_NAME=windows-latest.zip
-      
-          @REM upload pinned version
           gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
-          # gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
-          echo cp "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
 
       - name: Upload latest zip version to Google Cloud
         shell: cmd
@@ -189,17 +185,41 @@ jobs:
           set LATEST_FOLDER_NAME=latest
           set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
           set LATEST_FILE_NAME=windows-latest.zip
-
-          @REM upload latest version
           gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
-          # gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
-          echo cp "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
 
-      # - name: Compress and upload artifacts
-      #   run: |
-      #     cd "%USERPROFILE%"
-      #     tar -czvf "windows-release-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist"
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     name: "windows-release-${{ env.RELEASE_VERSION }}"
-      #     path: "windows-release-${{ env.RELEASE_VERSION }}.tar.gz"
+      - name: Authenticate GitHub CLI
+        shell: cmd
+        run: |
+          @echo off
+          @REM Authenticate GitHub CLI using the GitHub token
+          echo %GITHUB_TOKEN% | gh auth login --with-token
+
+      - name: Get the release body
+        shell: cmd
+        run: |
+          @echo off
+          set RELEASE_NAME=%GITHUB_REF_NAME%
+          for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
+          echo %RELEASE_BODY% > release_body.txt
+
+      - name: Append link to release body
+        shell: cmd
+        run: |
+          @echo off
+          set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+          set BUCKET_NAME=${{ env.BUCKET_NAME }}
+          set RELEASE_BODY=
+          for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
+          set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
+          echo %RELEASE_BODY% > new_release_body.txt
+          echo %NEW_LINK% >> new_release_body.txt
+
+      - name: Update the release body
+        shell: cmd
+        run: |
+          @echo off
+          set RELEASE_NAME=${{ github.ref_name }}
+          set NEW_RELEASE_BODY=
+          for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
+          echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
+
