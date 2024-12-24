@@ -1735,7 +1735,7 @@ def open_annotation_windows(recognition_file, class_list_txt, file_list_txt, lab
     # init paths
     labelImg_dir = os.path.join(EcoAssist_files, "Human-in-the-loop")
     labelImg_script = os.path.join(labelImg_dir, "labelImg.py")
-    python_executable = os.path.join(env_dir_fpath, "env-base", "bin", "python")
+    python_executable = get_python_interprator("base") # DEBUG os.path.join(env_dir_fpath, "env-base", "bin", "python")
 
     # create command
     command_args = []
@@ -1922,6 +1922,13 @@ def open_annotation_windows(recognition_file, class_list_txt, file_list_txt, lab
                                                                 change_hitl_var_in_json(recognition_file, "done"),
                                                                 update_frame_states()])
             btn_hitl_final_export_n.grid(row=0, column=1, rowspan=1, sticky='nesw', padx=5)
+
+# os dependent python executables
+def get_python_interprator(env_name):
+    if system == 'Windows':
+        return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "python.exe")
+    else:
+        return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "bin", "python")
 
 # get the images and xmls from annotation session and store them with unique filename
 def uniquify_and_move_img_and_xml_from_filelist(file_list_txt, recognition_file, hitl_final_window):
@@ -2287,7 +2294,7 @@ def classify_detections(json_fpath, data_type, simple_mode = False):
         cls_animal_smooth = var_smooth_cls_animal.get()
         
     # init paths
-    python_executable = os.path.join(env_dir_fpath, f"env-{cls_model_env}", "bin", "python")
+    python_executable = get_python_interprator(cls_model_env) # DEBUG os.path.join(env_dir_fpath, f"env-{cls_model_env}", "bin", "python")
     inference_script = os.path.join(EcoAssist_files, "EcoAssist", "classification_utils", "model_types", cls_model_type, "classify_detections.py")
 
     # # create command
@@ -2507,7 +2514,7 @@ def deploy_model(path_to_image_folder, selected_options, data_type, simple_mode 
     process_video_py = os.path.join(EcoAssist_files, "cameratraps", "megadetector", "detection", "process_video.py")
     video_recognition_file = "--output_json_file=" + os.path.join(chosen_folder, "video_recognition_file.json")
     GPU_param = "Unknown"
-    python_executable = os.path.join(env_dir_fpath, "env-base", "bin", "python")
+    python_executable = get_python_interprator("base") # DEBUG os.path.join(env_dir_fpath, "env-base", "bin", "python")
 
     # select model based on user input via dropdown menu, or take MDv5a for simple mode 
     custom_model_bool = False
