@@ -197,25 +197,23 @@ jobs:
           gh auth status
 
 
-      - name: Get the release body
-        shell: cmd
-        run: |
-          @echo off
-          set RELEASE_NAME=${{ github.ref_name }}
-          for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
-          echo %RELEASE_BODY% > release_body.txt
-
-      # - name: Append link to release body
+      # - name: Get the release body
       #   shell: cmd
       #   run: |
       #     @echo off
-      #     set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
-      #     set RELEASE_BODY=
-      #     for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
-      #     set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
-      #     echo %RELEASE_BODY% > new_release_body.txt
-      #     echo %NEW_LINK% >> new_release_body.txt
+      #     set RELEASE_NAME=${{ github.ref_name }}
+      #     for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
+      #     echo %RELEASE_BODY% > release_body.txt
+
+      - name: Get the release body
+        shell: pwsh
+        run: |
+          # Get the release body using GitHub CLI
+          $releaseName = "${{ github.ref_name }}"
+          $releaseBody = gh release view $releaseName --json body -q ".body"
+          
+          # Write the release body to a text file
+          $releaseBody | Out-File -FilePath release_body.txt
 
       - name: Update the release body
         shell: pwsh
@@ -242,22 +240,3 @@ jobs:
           # Update the release with the new body
           gh release edit $ReleaseName --notes-file "final_release_body.txt"
 
-      # - name: Update the release body
-      #   shell: cmd
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
-
-      # - name: Update the release body
-      #   shell: cmd
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     set NEW_RELEASE_BODY=
-      #     for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
-      #     echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
-
-  
