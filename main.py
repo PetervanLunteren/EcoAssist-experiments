@@ -8,13 +8,15 @@ import subprocess
 import sys
 import platform
 
+# check os
+system = platform.system()
+
 # os dependent preparation
 def run_os_dependent_preparation_tasks():
-    system = platform.system()
     msg = "Starting EcoAssist...\n\nThis may take a few minutes initially as dependencies, "\
           "environments, and models are loaded.\n\nDon't worry – subsequent starts will be faster!"
     if system == 'Windows':
-        subprocess.Popen(['python', '-c', f'import ctypes; ctypes.windll.user32.MessageBoxW(0, "{msg}", "Information", 0x40)'])
+        subprocess.Popen(['python', '-c', f'import ctypes; ctypes.windll.user32.MessageBoxW(0, "Starting EcoAssist... This may take a few minutes initially as dependencies, environments, and models are loaded. Subsequent starts will be faster!", "Information", 0x40)'])
     elif system == 'Darwin':
         subprocess.Popen(['osascript', '-e', f'display dialog "{msg}"'])            # show message
         subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])   # remove attributes
@@ -26,7 +28,10 @@ def run_os_dependent_preparation_tasks():
 
 # os dependent python executables
 def get_python_interprator(env_name):
-    return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "bin", "python")
+    if system == 'Windows':
+        return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "python.exe")
+    else:
+        return os.path.join(EcoAssist_files, "envs", f"env-{env_name}", "bin", "python")
 
 # clean path
 if getattr(sys, 'frozen', False):
@@ -48,12 +53,28 @@ first_startup_file = os.path.join(EcoAssist_files, "first-startup.txt")
 if os.path.exists(first_startup_file):
     run_os_dependent_preparation_tasks()
 
+# check windows debug exe
+windows_debug_mode = True if sys.executable.endswith("debug.exe") else False
+print(f"  windows_debug_mode: {windows_debug_mode}")
+
 # log
-print(f"first_startup_file: {first_startup_file}")
-print(f"   EcoAssist_files: {EcoAssist_files}")
-print(f"    sys.executable: {sys.executable}")
-print(f"        GUI_script: {GUI_script}")
+print(f"     EcoAssist_files: {EcoAssist_files}")
+print(f"  first_startup_file: {first_startup_file}")
+print(f"      sys.executable: {sys.executable}")
+print(f"          GUI_script: {GUI_script}")
+
+# python executable
+python_executable = get_python_interprator("base")
+print(f"   python_executable: {python_executable}")
 
 # run the GUI script
-print("Opening...")
-subprocess.run([get_python_interprator("base"), GUI_script])
+print("\nOpening application...")
+if system == 'Windows':
+    if windows_debug_mode:
+        subprocess.run([get_python_interprator("base"), GUI_script])
+        input("Press [Enter] to close console window...") # keep console open after closing app
+    else:
+        subprocess.run([get_python_interprator("base"), GUI_script],
+                       creationflags=subprocess.CREATE_NO_WINDOW)
+else:
+    subprocess.run([get_python_interprator("base"), GUI_script])
