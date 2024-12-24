@@ -24,10 +24,10 @@ jobs:
           echo "CONDA DIR IS -> ${{ env.CONDA_DIR }}"
 
       - name: try miniconda install
+        shell: cmd
         run: |
           set conda_exe=${{ env.CONDA_DIR }}\Scripts\conda.exe
-          # "%conda_exe%" create -p "%CONDA%\envs\env-fresh" python=3.8 pyinstaller -y
-          & $conda_exe create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
+          "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
 
 
       # - name: Install Miniconda MINICONDA IS PRE INSTALLED BUT NOT ADDED TO THE PATH
