@@ -218,15 +218,6 @@ jobs:
           echo !RELEASE_BODY! > new_release_body.txt
           echo !NEW_LINK! >> new_release_body.txt
           endlocal
-        
-          # @echo off
-          # set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-          # set BUCKET_NAME=${{ env.BUCKET_NAME }}
-          # set RELEASE_BODY=
-          # for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
-          # set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
-          # echo %RELEASE_BODY% > new_release_body.txt
-          # echo %NEW_LINK% >> new_release_body.txt
 
       - name: Update the release body
         shell: cmd
