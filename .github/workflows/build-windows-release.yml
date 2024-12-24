@@ -167,7 +167,7 @@ jobs:
         with:
           project_id: github-file-storage
 
-      - name: Upload files to Google Cloud
+      - name: Upload pinned zip version to Google Cloud
         shell: cmd
         run: |
           set BUCKET_NAME=${{ env.BUCKET_NAME }}
@@ -181,11 +181,19 @@ jobs:
           # gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
           echo cp "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
 
+      - name: Upload latest zip version to Google Cloud
+        shell: cmd
+        run: |
+          set BUCKET_NAME=${{ env.BUCKET_NAME }}
+          set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
+          set LATEST_FOLDER_NAME=latest
+          set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
+          set LATEST_FILE_NAME=windows-latest.zip
+
           @REM upload latest version
           gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
           # gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
           echo cp "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
-
 
       # - name: Compress and upload artifacts
       #   run: |
