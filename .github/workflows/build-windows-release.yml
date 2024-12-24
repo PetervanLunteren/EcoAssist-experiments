@@ -13,6 +13,7 @@ jobs:
     env:
       RELEASE_VERSION: ${{ github.event.release.tag_name }}
       BUCKET_NAME: github-release-files-storage
+      CONDA_DIR: C:\Miniconda
 
     steps:
       - name: Checkout repository
@@ -20,12 +21,12 @@ jobs:
 
       - name: Check miniconda install
         run: |
-          echo "CONDA DIR IS -> $env:CONDA"
+          echo "CONDA DIR IS -> ${{ env.RELEASE_VERSION }}
 
       - name: try miniconda install
         run: |
-          set conda_exe=%CONDA%\Scripts\conda.exe
-          call "%conda_exe%" create -p "%CONDA%\envs\env-fresh" python=3.8 pyinstaller -y
+          set conda_exe=${{ env.RELEASE_VERSION }}\Scripts\conda.exe
+          "%conda_exe%" create -p "%CONDA%\envs\env-fresh" python=3.8 pyinstaller -y
 
 
       # - name: Install Miniconda MINICONDA IS PRE INSTALLED BUT NOT ADDED TO THE PATH
