@@ -57,17 +57,25 @@ if os.path.exists(first_startup_file):
 
 # check windows debug exe
 windows_debug_mode = True if sys.executable.endswith("debug.exe") else False
-print(f"  windows_debug_mode: {windows_debug_mode}")
+print(f"\n  windows_debug_mode: {windows_debug_mode}")
 
 # log
 print(f"     EcoAssist_files: {EcoAssist_files}")
-print(f"  first_startup_file: {first_startup_file}")
 print(f"      sys.executable: {sys.executable}")
 print(f"          GUI_script: {GUI_script}")
 
 # python executable
 python_executable = get_python_interprator("base")
 print(f"   python_executable: {python_executable}")
+
+# cuda toolkit
+cuda_toolkit_path = os.environ.get("CUDA_HOME") or os.environ.get("CUDA_PATH")
+# if cuda_toolkit_path:
+#     cuda_toolkit_path = os.path.join(cuda_toolkit_path, "bin")
+#     current_path = os.environ.get("PATH", "")
+#     if cuda_toolkit_path not in current_path:
+#         os.environ["PATH"] = current_path + os.pathsep + cuda_toolkit_path
+print(f"   cuda_toolkit_path: {cuda_toolkit_path}")
 
 # run the GUI script
 print("\nOpening application...")
