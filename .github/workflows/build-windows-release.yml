@@ -21,11 +21,11 @@ jobs:
 
       - name: Check miniconda install
         run: |
-          echo "CONDA DIR IS -> ${{ env.RELEASE_VERSION }}
+          echo "CONDA DIR IS -> ${{ env.CONDA_DIR }}"
 
       - name: try miniconda install
         run: |
-          set conda_exe=${{ env.RELEASE_VERSION }}\Scripts\conda.exe
+          set conda_exe=${{ env.CONDA_DIR }}\Scripts\conda.exe
           "%conda_exe%" create -p "%CONDA%\envs\env-fresh" python=3.8 pyinstaller -y
 
 
