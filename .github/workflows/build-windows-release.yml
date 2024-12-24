@@ -1,4 +1,4 @@
-o name: Build Windows release
+name: Build Windows release
 
 on:
   release:
