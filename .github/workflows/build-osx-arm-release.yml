@@ -1,9 +1,11 @@
 name: Build macOS ARM release
 
 on:
-  release:
-    types:
-      - published
+  workflow_dispatch:
+  # release:
+  #   types:
+  #     - published
+        
 
 jobs:
   build-osx-arm-release:
