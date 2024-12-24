@@ -205,17 +205,17 @@ jobs:
           for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
           echo %RELEASE_BODY% > release_body.txt
 
-      - name: Append link to release body
-        shell: cmd
-        run: |
-          @echo off
-          set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-          set BUCKET_NAME=${{ env.BUCKET_NAME }}
-          set RELEASE_BODY=
-          for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
-          set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
-          echo %RELEASE_BODY% > new_release_body.txt
-          echo %NEW_LINK% >> new_release_body.txt
+      # - name: Append link to release body
+      #   shell: cmd
+      #   run: |
+      #     @echo off
+      #     set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
+      #     set RELEASE_BODY=
+      #     for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
+      #     set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
+      #     echo %RELEASE_BODY% > new_release_body.txt
+      #     echo %NEW_LINK% >> new_release_body.txt
 
       - name: Update the release body
         shell: pwsh
@@ -234,7 +234,7 @@ jobs:
           }
       
           # Append the new link for the macOS install
-          $ReleaseBody += "`n- Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)"
+          $ReleaseBody += "`n- Install for **Windows**: [windows-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/windows-${{ env.RELEASE_VERSION }}.zip)"
       
           # Save the updated release body to a file
           $ReleaseBody | Out-File -FilePath "final_release_body.txt"
