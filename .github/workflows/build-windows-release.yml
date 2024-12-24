@@ -191,7 +191,8 @@ jobs:
         shell: cmd
         run: |
           @echo off
-          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          set SECRET=${{ secrets.GITHUB_TOKEN }}
+          echo "%SECRET%" | gh auth login --with-token
 
       - name: Get the release body
         shell: cmd
