@@ -24,7 +24,9 @@ jobs:
 
       - name: try miniconda install
         run: |
-          
+          set conda_exe=%CONDA%\Scripts\conda.exe
+          call "%conda_exe%" create -p "%CONDA%\envs\env-fresh" python=3.8 pyinstaller -y
+
 
       # - name: Install Miniconda MINICONDA IS PRE INSTALLED BUT NOT ADDED TO THE PATH
       #   run: |
@@ -34,53 +36,53 @@ jobs:
       #     setx PATH "%USERPROFILE%\miniforge;%USERPROFILE%\miniforge\condabin;%PATH%"
       #     conda --version
 
-      - name: Set up environment and dependencies
-        run: |
-          set root=%USERPROFILE%\EcoAssist
-          if exist "%root%" (
-              rmdir /s /q "%root%"
-              echo %root% folder removed
-          )
-          mkdir "%root%"
-          mkdir "%root%\envs"
-          mkdir "%root%\models"
-          mkdir "%root%\models\det"
-          mkdir "%root%\models\cls"
-          mkdir "%root%\models\det\MegaDetector 5a"
-          mkdir "%root%\yolov5_versions\yolov5_old"
-          mkdir "%root%\yolov5_versions\yolov5_new"
-          echo Hello world! > "%root%\first-startup.txt"
+      # - name: Set up environment and dependencies
+      #   run: |
+      #     set root=%USERPROFILE%\EcoAssist
+      #     if exist "%root%" (
+      #         rmdir /s /q "%root%"
+      #         echo %root% folder removed
+      #     )
+      #     mkdir "%root%"
+      #     mkdir "%root%\envs"
+      #     mkdir "%root%\models"
+      #     mkdir "%root%\models\det"
+      #     mkdir "%root%\models\cls"
+      #     mkdir "%root%\models\det\MegaDetector 5a"
+      #     mkdir "%root%\yolov5_versions\yolov5_old"
+      #     mkdir "%root%\yolov5_versions\yolov5_new"
+      #     echo Hello world! > "%root%\first-startup.txt"
 
-          rem Clone repositories
-          git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "%root%\EcoAssist-experiments"
-          rmdir /s /q "%root%\EcoAssist-experiments\.git"
-          move "%root%\EcoAssist-experiments" "%root%\EcoAssist"
-          move "%root%\EcoAssist\main.py" "%root%\main.py"
-          echo EcoAssist cloned
+      #     rem Clone repositories
+      #     git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "%root%\EcoAssist-experiments"
+      #     rmdir /s /q "%root%\EcoAssist-experiments\.git"
+      #     move "%root%\EcoAssist-experiments" "%root%\EcoAssist"
+      #     move "%root%\EcoAssist\main.py" "%root%\main.py"
+      #     echo EcoAssist cloned
 
-          git clone https://github.com/agentmorris/MegaDetector.git "%root%\MegaDetector"
-          pushd "%root%\MegaDetector"
-          git checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
-          popd
-          rmdir /s /q "%root%\MegaDetector\.git"
-          move "%root%\MegaDetector" "%root%\cameratraps"
-          echo MegaDetector cloned
+      #     git clone https://github.com/agentmorris/MegaDetector.git "%root%\MegaDetector"
+      #     pushd "%root%\MegaDetector"
+      #     git checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
+      #     popd
+      #     rmdir /s /q "%root%\MegaDetector\.git"
+      #     move "%root%\MegaDetector" "%root%\cameratraps"
+      #     echo MegaDetector cloned
 
-          rem Install dependencies via Conda
-          call "%USERPROFILE%\miniforge\condabin\conda.bat" env create --file="%root%\cameratraps\envs\environment-detector-windows.yml" --prefix "%root%\envs\env-base"
-          call "%USERPROFILE%\miniforge\condabin\conda.bat" run --prefix "%root%\envs\env-base" pip install opencv-python folium plotly RangeSlider gpsphoto exifread piexif openpyxl customtkinter CTkTable
-          call "%USERPROFILE%\miniforge\condabin\conda.bat" clean --all --yes --force-pkgs-dirs
+      #     rem Install dependencies via Conda
+      #     call "%USERPROFILE%\miniforge\condabin\conda.bat" env create --file="%root%\cameratraps\envs\environment-detector-windows.yml" --prefix "%root%\envs\env-base"
+      #     call "%USERPROFILE%\miniforge\condabin\conda.bat" run --prefix "%root%\envs\env-base" pip install opencv-python folium plotly RangeSlider gpsphoto exifread piexif openpyxl customtkinter CTkTable
+      #     call "%USERPROFILE%\miniforge\condabin\conda.bat" clean --all --yes --force-pkgs-dirs
 
-      - name: Build Windows executable
-        run: |
-          call "%USERPROFILE%\miniforge\condabin\conda.bat" create --prefix "%USERPROFILE%\miniforge\envs\env-build" python=3.8 pyinstaller -y
-          call "%USERPROFILE%\miniforge\condabin\conda.bat" run --prefix "%USERPROFILE%\miniforge\envs\env-build" pyinstaller --onefile --windowed --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+      # - name: Build Windows executable
+      #   run: |
+      #     call "%USERPROFILE%\miniforge\condabin\conda.bat" create --prefix "%USERPROFILE%\miniforge\envs\env-build" python=3.8 pyinstaller -y
+      #     call "%USERPROFILE%\miniforge\condabin\conda.bat" run --prefix "%USERPROFILE%\miniforge\envs\env-build" pyinstaller --onefile --windowed --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
 
-      - name: Compress and upload artifacts
-        run: |
-          cd "%USERPROFILE%"
-          tar -czvf "windows-release-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist"
-        uses: actions/upload-artifact@v3
-        with:
-          name: "windows-release-${{ env.RELEASE_VERSION }}"
-          path: "windows-release-${{ env.RELEASE_VERSION }}.tar.gz"
+      # - name: Compress and upload artifacts
+      #   run: |
+      #     cd "%USERPROFILE%"
+      #     tar -czvf "windows-release-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist"
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: "windows-release-${{ env.RELEASE_VERSION }}"
+      #     path: "windows-release-${{ env.RELEASE_VERSION }}.tar.gz"
