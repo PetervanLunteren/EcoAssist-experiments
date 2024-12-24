@@ -193,9 +193,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           @echo off
-          echo %GITHUB_TOKEN% | gh auth login --with-token
-
-
+          echo %GITHUB_TOKEN% | gh auth login --with-token --hostname github.com
+          gh auth status
 
 
       - name: Get the release body
