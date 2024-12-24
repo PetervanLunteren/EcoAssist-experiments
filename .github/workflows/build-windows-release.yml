@@ -26,10 +26,9 @@ jobs:
       - name: Debug dependencies
         shell: cmd
         run: |
-          @REM init environment vars
           set root=%USERPROFILE%\EcoAssist
           mkdir "%root%"
-          echo "Hello world!" >> "%root%\text.txt"
+          git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
 
       # - name: Install dependencies
       #   shell: cmd
