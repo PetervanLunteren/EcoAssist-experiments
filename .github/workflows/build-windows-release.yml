@@ -197,16 +197,12 @@ jobs:
           gh auth status
 
 
-      # - name: Get the release body
-      #   shell: cmd
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
-      #     echo %RELEASE_BODY% > release_body.txt
+
 
       - name: Get the release body
         shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Get the release body using GitHub CLI
           $releaseName = "${{ github.ref_name }}"
@@ -214,6 +210,9 @@ jobs:
           
           # Write the release body to a text file
           $releaseBody | Out-File -FilePath release_body.txt
+
+
+
 
       - name: Update the release body
         shell: pwsh
