@@ -24,6 +24,7 @@ jobs:
           echo "CONDA DIR IS -> ${{ env.CONDA_DIR }}"
 
       - name: Debug dependencies
+        shell: cmd
         run: |
           @REM init environment vars
           set root=%USERPROFILE%\EcoAssist
