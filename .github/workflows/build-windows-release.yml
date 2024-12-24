@@ -154,8 +154,7 @@ jobs:
       - name: Zip folder contents with 7-Zip
         shell: cmd
         run: |
-          cd %USERPROFILE%
-          "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "EcoAssist\*"
+          "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist\*"
 
       # - name: Compress and upload artifacts
       #   run: |
