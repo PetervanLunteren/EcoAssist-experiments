@@ -99,9 +99,9 @@ jobs:
           curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
 
           @REM install mamba
-          call "%conda_exe%" install -n base -c conda-forge mamba
+          call "%conda_exe%" install -n base -c conda-forge mamba -y
           @REM DEBUG
-          set conda_exe=mamba
+          set conda_exe=${{ env.CONDA_DIR }}\Scripts\mamba.exe
           
           @REM env-base
           call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
