@@ -80,7 +80,7 @@ print(f"    cuda_toolkit_path: {cuda_toolkit_path}")
 if macos_installer_mode:
     run_os_dependent_preparation_tasks("Darwin")
     print("Loading dependencies and environments... (this can take a minute)")
-    subprocess.run([get_python_interprator("base"), GUI_script, "macos-installer"])
+    subprocess.run([get_python_interprator("base"), GUI_script, "installer"])
     sys.exit()
 
 # run the GUI script
