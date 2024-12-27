@@ -27,7 +27,7 @@ jobs:
       - name: Append link to release body
         shell: pwsh
         run: |
-          Add-Content -Path "release_body.txt" -Value '- Install for **Windows**: [link](www.addaxdatascience.com)'
+          Add-Content -Path "release_body.txt" -Value '- Install for **Windows**: [link](https://addaxdatascience.com/)'
 
       - name: Update the release body
         shell: cmd
