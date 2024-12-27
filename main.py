@@ -20,7 +20,8 @@ def run_os_dependent_preparation_tasks():
             'import ctypes; ctypes.windll.user32.MessageBoxW(0, "Starting EcoAssist... This may take a few minutes initially as dependencies, environments, and models are loaded. Subsequent starts will be faster!", "Information", 0x40)'],
             creationflags=subprocess.CREATE_NO_WINDOW)
     elif system == 'Darwin':
-        subprocess.Popen(['osascript', '-e', f'display dialog "{msg}"'])            # show message
+        # subprocess.Popen(['osascript', '-e', f'display dialog "{msg}"'])            # show message # DEBUG
+        print("\n\n |--------------------------------------------------------|\n | Installing EcoAssist... This may take a few minutes... | \n |--------------------------------------------------------|\n\n")
         subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])   # remove attributes
     elif system == 'Linux':
         subprocess.Popen(['zenity', '--info', '--text', msg])
