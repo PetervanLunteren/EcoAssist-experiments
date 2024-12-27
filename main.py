@@ -11,11 +11,6 @@ import platform
 # check os
 system = platform.system()
 
-# Open log file to capture output
-log_file = "EcoAssist_debug_log.txt"
-sys.stdout = open(log_file, 'w')  # Redirect standard output to file
-sys.stderr = sys.stdout  # Redirect standard error to the same file
-
 # os dependent preparation
 def run_os_dependent_preparation_tasks():
     msg = "Starting EcoAssist...\n\nThis may take a few minutes initially as dependencies, "\
