@@ -101,7 +101,7 @@ jobs:
           @REM install mamba
           call "%conda_exe%" install -n base -c conda-forge mamba -y
           @REM DEBUG
-          set conda_exe=${{ env.CONDA_DIR }}\Scripts\mamba.exe
+          set conda_exe=${{ env.CONDA_DIR }}\condabin\mamba.bat
           
           @REM env-base
           call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
