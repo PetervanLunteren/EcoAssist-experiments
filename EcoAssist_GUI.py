@@ -108,8 +108,9 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 # check if the script is ran from the macOS installer executable
 # if so, don't actually execute the script - it is meant just for installation purposes
-if sys.argv[1] == "installer":
-    exit()
+if len(sys.argv) > 1:
+    if sys.argv[1] == "installer":
+        exit()
 
 # set global variables
 EcoAssist_files = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
