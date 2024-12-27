@@ -20,9 +20,12 @@ def run_os_dependent_preparation_tasks():
             'import ctypes; ctypes.windll.user32.MessageBoxW(0, "Starting EcoAssist... This may take a few minutes initially as dependencies, environments, and models are loaded. Subsequent starts will be faster!", "Information", 0x40)'],
             creationflags=subprocess.CREATE_NO_WINDOW)
     elif system == 'Darwin':
-        # subprocess.Popen(['osascript', '-e', f'display dialog "{msg}"'])            # show message # DEBUG
-        print("\n\n |--------------------------------------------------------|\n | Installing EcoAssist... This may take a few minutes... | \n |--------------------------------------------------------|\n\n")
+        print("\n")
+        print("Checking files... This can take a minute or so...")
         subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])   # remove attributes
+        print("Done!")
+        print("\n")
+        
     elif system == 'Linux':
         subprocess.Popen(['zenity', '--info', '--text', msg])
     else:
@@ -52,29 +55,34 @@ if EcoAssist_files.endswith(".app/Contents/MacOS"):
 GUI_script = os.path.join(EcoAssist_files, "EcoAssist", "EcoAssist_GUI.py")
 first_startup_file = os.path.join(EcoAssist_files, "first-startup.txt")
 
-# prepare
+# prepare files
 if os.path.exists(first_startup_file):
     run_os_dependent_preparation_tasks()
 
 # check windows debug exe
 windows_debug_mode = True if sys.executable.endswith("debug.exe") else False
-print(f"\n  windows_debug_mode: {windows_debug_mode}")
+print(f"   windows_debug_mode: {windows_debug_mode}")
 
 # log
-print(f"     EcoAssist_files: {EcoAssist_files}")
-print(f"      sys.executable: {sys.executable}")
-print(f"          GUI_script: {GUI_script}")
+print(f"      EcoAssist_files: {EcoAssist_files}")
+print(f"       sys.executable: {sys.executable}")
+print(f"           GUI_script: {GUI_script}")
 
 # python executable
 python_executable = get_python_interprator("base")
-print(f"   python_executable: {python_executable}")
+print(f"    python_executable: {python_executable}")
 
 # cuda toolkit
 cuda_toolkit_path = os.environ.get("CUDA_HOME") or os.environ.get("CUDA_PATH")
-print(f"   cuda_toolkit_path: {cuda_toolkit_path}")
+print(f"    cuda_toolkit_path: {cuda_toolkit_path}")
+
+# print message
+if os.path.exists(first_startup_file):
+    print("\nStarting EcoAssist...\nThis may take a few minutes initially as dependencies, environments, and models are loaded.\nSubsequent starts will be faster!")
+else:
+    print("\nOpening application...") 
 
 # run the GUI script
-print("\nOpening application...")
 if system == 'Windows':
     if windows_debug_mode:
         subprocess.run([get_python_interprator("base"), GUI_script])
