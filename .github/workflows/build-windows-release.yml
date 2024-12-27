@@ -20,204 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Check miniconda install
-        run: |
-          echo "CONDA DIR IS -> ${{ env.CONDA_DIR }}"
-
-      - name: Debug dependencies
-        shell: cmd
-        run: |
-          set root=%USERPROFILE%\EcoAssist
-          mkdir "%root%"
-          git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
-
-      # - name: Install dependencies
-      #   shell: cmd
-      #   run: |
-
-      #     echo off
-      #     @setlocal EnableDelayedExpansion
-          
-      #     @REM init environment vars
-      #     set root=%USERPROFILE%\EcoAssist
-      #     set conda_exe=${{ env.CONDA_DIR }}\Scripts\conda.exe
-      #     echo Using conda %conda_exe%
-          
-      #     @REM refresh dir
-      #     if exist "%root%" (
-      #         rmdir /s /q "%root%"
-      #         echo %root% folder removed
-      #     )
-          
-      #     @REM create folder structure
-      #     mkdir "%root%"
-      #     mkdir "%root%\envs"
-      #     mkdir "%root%\models"
-      #     mkdir "%root%\models\det"
-      #     mkdir "%root%\models\cls"
-      #     mkdir "%root%\models\det\MegaDetector 5a"
-      #     mkdir "%root%\yolov5_versions\yolov5_old"
-      #     mkdir "%root%\yolov5_versions\yolov5_new"
-      #     echo Hello world! > "%root%\first-startup.txt"
-          
-      #     @REM EcoAssist
-      #     git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "%root%\EcoAssist"
-      #     rmdir /s /q "%root%\EcoAssist\.git"
-      #     move "%root%\EcoAssist\main.py" "%root%\main.py"
-      #     echo EcoAssist cloned
-          
-      #     @REM MegaDetector
-      #     git clone https://github.com/agentmorris/MegaDetector.git "%root%\cameratraps"
-      #     pushd "%root%\cameratraps"
-      #     git checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
-      #     popd
-      #     rmdir /s /q "%root%\cameratraps\.git"
-      #     echo MegaDetector cloned
-          
-      #     @REM YOLOv5 old
-      #     git clone https://github.com/ultralytics/yolov5.git "%root%\yolov5_versions\yolov5_old\yolov5"
-      #     pushd "%root%\yolov5_versions\yolov5_old\yolov5"
-      #     git checkout c23a441c9df7ca9b1f275e8c8719c949269160d1
-      #     popd
-      #     rmdir /s /q "%root%\yolov5_versions\yolov5_old\yolov5\.git"
-      #     echo YOLOv5 old cloned
-          
-      #     @REM YOLOv5 new
-      #     git clone https://github.com/ultralytics/yolov5.git "%root%\yolov5_versions\yolov5_new\yolov5"
-      #     pushd "%root%\yolov5_versions\yolov5_new\yolov5"
-      #     git checkout 3e55763d45f9c5f8217e4dad5ba1e6c1f42e3bf8
-      #     popd
-      #     rmdir /s /q "%root%\yolov5_versions\yolov5_new\yolov5\.git"
-      #     echo YOLOv5 new cloned
-          
-      #     @REM Human in the loop
-      #     git clone --depth 1 https://github.com/PetervanLunteren/Human-in-the-loop.git "%root%\Human-in-the-loop"
-      #     rmdir /s /q "%root%\Human-in-the-loop\.git"
-      #     echo Human-in-the-loop cloned
-          
-      #     @REM Visualise detections
-      #     git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
-      #     rmdir /s /q "%root%\visualise_detection\.git"
-      #     echo visualise_detection cloned
-          
-      #     @REM MegaDetector model 5A
-      #     curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
-          
-      #     @REM env-base
-      #     call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision torchaudio -y 
-      #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchaudio==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
-          
-      #     @REM env-pytorch
-      #     call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
-      #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
-          
-      #     @REM env-tensorflow
-      #     call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
-          
-      #     @REM install PyInstaller
-      #     call "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
-          
-      #     @REM normal executable
-      #     call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --noconsole --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
-      #     move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION%.exe"
-          
-      #     @REM debug executable
-      #     call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --console --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
-      #     move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION% debug.exe"
-          
-      #     @REM conda clean
-      #     call "%conda_exe%" clean --all --yes --force-pkgs-dirs
-      #     call "%conda_exe%" clean --all --yes
-
-      # - name: Zip folder contents
-      #   run: |
-      #     cd %USERPROFILE%
-      #     cd $env:USERPROFILE
-      #     Compress-Archive -Path "EcoAssist\*" -DestinationPath "windows-${{ env.RELEASE_VERSION }}.zip"
-
-      - name: Zip folder contents with 7-Zip
-        shell: cmd
-        run: |
-          "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist\*"
-
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
-  
-      - name: Set up Google Cloud
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: github-file-storage
-
-      - name: Upload pinned zip version to Google Cloud
-        shell: cmd
-        run: |
-          set BUCKET_NAME=${{ env.BUCKET_NAME }}
-          set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
-          set LATEST_FOLDER_NAME=latest
-          set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
-          set LATEST_FILE_NAME=windows-latest.zip
-          gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
-
-      - name: Upload latest zip version to Google Cloud
-        shell: cmd
-        run: |
-          set BUCKET_NAME=${{ env.BUCKET_NAME }}
-          set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
-          set LATEST_FOLDER_NAME=latest
-          set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
-          set LATEST_FILE_NAME=windows-latest.zip
-          gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
-
-      - name: Authenticate GitHub CLI
-        shell: cmd
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          @echo off
-          echo %GITHUB_TOKEN% | gh auth login --with-token --hostname github.com
-          gh auth status
-
-
       - name: Get the release body
-        shell: cmd
-        run: |
-          @echo off
-          set RELEASE_NAME=${{ github.ref_name }}
-          for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
-          echo %RELEASE_BODY% > release_body.txt
+        shell: pwsh
+        run: Invoke-RestMethod -Uri https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.release.tag_name }} | ForEach-Object { $_.body } | Out-File -FilePath release_body.txt -Encoding utf8
 
       - name: Append link to release body
-        shell: cmd
+        shell: pwsh
         run: |
-          @echo off
-          setlocal EnableDelayedExpansion
-          set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-          set BUCKET_NAME=${{ env.BUCKET_NAME }}
-          set RELEASE_BODY=
-          for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
-          set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
-          echo !RELEASE_BODY! > new_release_body.txt
-          echo !NEW_LINK! >> new_release_body.txt
-          endlocal
+          Add-Content -Path "release_body.txt" -Value '- Install for **Windows**: [link](www.addaxdatascience.com)'
 
       - name: Update the release body
         shell: cmd
@@ -226,15 +36,222 @@ jobs:
         run: |
           @echo off
           set RELEASE_NAME=${{ github.ref_name }}
-          gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
+          gh release edit %RELEASE_NAME% --notes-file release_body.txt
 
-      # - name: Update the release body
+
+
+
+      # - name: Debug dependencies
+      #   shell: cmd
+      #   run: |
+      #     set root=%USERPROFILE%\EcoAssist
+      #     mkdir "%root%"
+      #     git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
+
+      # # - name: Install dependencies
+      # #   shell: cmd
+      # #   run: |
+
+      # #     echo off
+      # #     @setlocal EnableDelayedExpansion
+          
+      # #     @REM init environment vars
+      # #     set root=%USERPROFILE%\EcoAssist
+      # #     set conda_exe=${{ env.CONDA_DIR }}\Scripts\conda.exe
+      # #     echo Using conda %conda_exe%
+          
+      # #     @REM refresh dir
+      # #     if exist "%root%" (
+      # #         rmdir /s /q "%root%"
+      # #         echo %root% folder removed
+      # #     )
+          
+      # #     @REM create folder structure
+      # #     mkdir "%root%"
+      # #     mkdir "%root%\envs"
+      # #     mkdir "%root%\models"
+      # #     mkdir "%root%\models\det"
+      # #     mkdir "%root%\models\cls"
+      # #     mkdir "%root%\models\det\MegaDetector 5a"
+      # #     mkdir "%root%\yolov5_versions\yolov5_old"
+      # #     mkdir "%root%\yolov5_versions\yolov5_new"
+      # #     echo Hello world! > "%root%\first-startup.txt"
+          
+      # #     @REM EcoAssist
+      # #     git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "%root%\EcoAssist"
+      # #     rmdir /s /q "%root%\EcoAssist\.git"
+      # #     move "%root%\EcoAssist\main.py" "%root%\main.py"
+      # #     echo EcoAssist cloned
+          
+      # #     @REM MegaDetector
+      # #     git clone https://github.com/agentmorris/MegaDetector.git "%root%\cameratraps"
+      # #     pushd "%root%\cameratraps"
+      # #     git checkout e8a4fc19a2b9ad1892dd9ce65d437252df271576
+      # #     popd
+      # #     rmdir /s /q "%root%\cameratraps\.git"
+      # #     echo MegaDetector cloned
+          
+      # #     @REM YOLOv5 old
+      # #     git clone https://github.com/ultralytics/yolov5.git "%root%\yolov5_versions\yolov5_old\yolov5"
+      # #     pushd "%root%\yolov5_versions\yolov5_old\yolov5"
+      # #     git checkout c23a441c9df7ca9b1f275e8c8719c949269160d1
+      # #     popd
+      # #     rmdir /s /q "%root%\yolov5_versions\yolov5_old\yolov5\.git"
+      # #     echo YOLOv5 old cloned
+          
+      # #     @REM YOLOv5 new
+      # #     git clone https://github.com/ultralytics/yolov5.git "%root%\yolov5_versions\yolov5_new\yolov5"
+      # #     pushd "%root%\yolov5_versions\yolov5_new\yolov5"
+      # #     git checkout 3e55763d45f9c5f8217e4dad5ba1e6c1f42e3bf8
+      # #     popd
+      # #     rmdir /s /q "%root%\yolov5_versions\yolov5_new\yolov5\.git"
+      # #     echo YOLOv5 new cloned
+          
+      # #     @REM Human in the loop
+      # #     git clone --depth 1 https://github.com/PetervanLunteren/Human-in-the-loop.git "%root%\Human-in-the-loop"
+      # #     rmdir /s /q "%root%\Human-in-the-loop\.git"
+      # #     echo Human-in-the-loop cloned
+          
+      # #     @REM Visualise detections
+      # #     git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
+      # #     rmdir /s /q "%root%\visualise_detection\.git"
+      # #     echo visualise_detection cloned
+          
+      # #     @REM MegaDetector model 5A
+      # #     curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
+          
+      # #     @REM env-base
+      # #     call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision torchaudio -y 
+      # #     call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchaudio==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+          
+      # #     @REM env-pytorch
+      # #     call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
+      # #     call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
+          
+      # #     @REM env-tensorflow
+      # #     call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
+          
+      # #     @REM install PyInstaller
+      # #     call "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
+          
+      # #     @REM normal executable
+      # #     call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --noconsole --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+      # #     move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION%.exe"
+          
+      # #     @REM debug executable
+      # #     call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --console --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+      # #     move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION% debug.exe"
+          
+      # #     @REM conda clean
+      # #     call "%conda_exe%" clean --all --yes --force-pkgs-dirs
+      # #     call "%conda_exe%" clean --all --yes
+
+      # # - name: Zip folder contents
+      # #   run: |
+      # #     cd %USERPROFILE%
+      # #     cd $env:USERPROFILE
+      # #     Compress-Archive -Path "EcoAssist\*" -DestinationPath "windows-${{ env.RELEASE_VERSION }}.zip"
+
+      # - name: Zip folder contents with 7-Zip
+      #   shell: cmd
+      #   run: |
+      #     "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist\*"
+
+      # - name: Authenticate with Google Cloud
+      #   uses: google-github-actions/auth@v1
+      #   with:
+      #     credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
+  
+      # - name: Set up Google Cloud
+      #   uses: google-github-actions/setup-gcloud@v1
+      #   with:
+      #     project_id: github-file-storage
+
+      # - name: Upload pinned zip version to Google Cloud
+      #   shell: cmd
+      #   run: |
+      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
+      #     set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
+      #     set LATEST_FOLDER_NAME=latest
+      #     set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
+      #     set LATEST_FILE_NAME=windows-latest.zip
+      #     gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
+
+      # - name: Upload latest zip version to Google Cloud
+      #   shell: cmd
+      #   run: |
+      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
+      #     set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
+      #     set LATEST_FOLDER_NAME=latest
+      #     set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.zip
+      #     set LATEST_FILE_NAME=windows-latest.zip
+      #     gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
+
+      # - name: Authenticate GitHub CLI
+      #   shell: cmd
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     @echo off
+      #     echo %GITHUB_TOKEN% | gh auth login --with-token --hostname github.com
+      #     gh auth status
+
+
+      # - name: Get the release body
       #   shell: cmd
       #   run: |
       #     @echo off
       #     set RELEASE_NAME=${{ github.ref_name }}
-      #     set NEW_RELEASE_BODY=
-      #     for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
-      #     echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
+      #     for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
+      #     echo %RELEASE_BODY% > release_body.txt
+
+      # - name: Append link to release body
+      #   shell: cmd
+      #   run: |
+      #     @echo off
+      #     setlocal EnableDelayedExpansion
+      #     set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
+      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
+      #     set RELEASE_BODY=
+      #     for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
+      #     set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
+      #     echo !RELEASE_BODY! > new_release_body.txt
+      #     echo !NEW_LINK! >> new_release_body.txt
+      #     endlocal
+
+      # - name: Update the release body
+      #   shell: cmd
+      #   env:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     @echo off
+      #     set RELEASE_NAME=${{ github.ref_name }}
+      #     gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
+
+      # # - name: Update the release body
+      # #   shell: cmd
+      # #   run: |
+      # #     @echo off
+      # #     set RELEASE_NAME=${{ github.ref_name }}
+      # #     set NEW_RELEASE_BODY=
+      # #     for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
+      # #     echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
 
   
