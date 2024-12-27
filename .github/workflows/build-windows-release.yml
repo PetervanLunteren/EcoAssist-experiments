@@ -97,6 +97,11 @@ jobs:
           
           @REM MegaDetector model 5A
           curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
+
+          @REM install mamba
+          call "%conda_exe%" install -n base -c conda-forge mamba
+          @REM DEBUG
+          set conda_exe=mamba
           
           @REM env-base
           call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
@@ -144,9 +149,9 @@ jobs:
       - name: Create self-extracting zip archive
         shell: cmd
         run: |
-          @REM "C:\Program Files\7-Zip\7z.exe" a -sfxx64\7z.sfx -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.exe" "%USERPROFILE%\EcoAssist"
+          "C:\Program Files\7-Zip\7z.exe" a -sfxx64\7z.sfx -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.exe" "%USERPROFILE%\EcoAssist"
           @REM "C:\Program Files\7-Zip\7z.exe" a -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.7z" "%USERPROFILE%\EcoAssist"
-          "C:\Program Files\7-Zip\7z.exe" a -tzip -mx9 "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist"
+          @REM "C:\Program Files\7-Zip\7z.exe" a -tzip -mx9 "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist"
 
 
       - name: Authenticate with Google Cloud
