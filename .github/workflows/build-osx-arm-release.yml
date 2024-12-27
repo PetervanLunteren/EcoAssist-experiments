@@ -105,7 +105,7 @@ jobs:
           
           ### install env-base
           $conda_exe env create --file="${root}/cameratraps/envs/environment-detector-m1.yml" -p "${root}/envs/env-base"
-          $conda_exe run -p "${root}/envs/env-base" conda install pytorch==1.13.1 torchvision==0.14.1 torchaudio==0.13.1 -c pytorch -y
+          $conda_exe run -p "${root}/envs/env-base" conda install pytorch==1.13.1 torchvision==0.14.1 -c pytorch -y
           $conda_exe run -p "${root}/envs/env-base" conda uninstall opencv -y
           $conda_exe run -p "${root}/envs/env-base" pip install opencv-python
           $conda_exe run -p "${root}/envs/env-base" pip install RangeSlider
@@ -131,7 +131,7 @@ jobs:
           
           ### install env-pytorch
           $conda_exe create -p "${root}/envs/env-pytorch" python=3.8 -y
-          $conda_exe run -p "${root}/envs/env-pytorch" pip install torch==2.0.1 torchvision==0.15.2 torchaudio==2.0.2
+          $conda_exe run -p "${root}/envs/env-pytorch" pip install torch==2.0.1 torchvision==0.15.2
           $conda_exe run -p "${root}/envs/env-pytorch" pip install "ultralytics==8.0.191"
           $conda_exe run -p "${root}/envs/env-pytorch" pip install "numpy==1.24.1"
           $conda_exe run -p "${root}/envs/env-pytorch" pip install "humanfriendly==10.0"
