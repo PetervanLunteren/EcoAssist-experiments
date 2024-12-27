@@ -165,7 +165,7 @@ jobs:
       - name: Create self-extracting 7z archive
         shell: cmd
         run: |
-          "C:\Program Files\7-Zip\7z.exe" a -sfx7z.sfx -t7z -mx9 "install-EcoAssist-${{ env.RELEASE_VERSION }}.exe" "%USERPROFILE%\EcoAssist"
+          "C:\Program Files\7-Zip\7z.exe" a -sfx7z.sfx -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.exe" "%USERPROFILE%\EcoAssist"
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
