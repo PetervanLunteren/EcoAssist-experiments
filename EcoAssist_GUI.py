@@ -145,9 +145,10 @@ paths_to_add = [
     os.path.join(EcoAssist_files),
     os.path.join(EcoAssist_files, "cameratraps"),
     os.path.join(EcoAssist_files, "cameratraps", "megadetector"),
-    os.path.join(EcoAssist_files, "EcoAssist"),
-    os.path.join(cuda_toolkit_path, "bin")
+    os.path.join(EcoAssist_files, "EcoAssist")
 ]
+if cuda_toolkit_path:
+    paths_to_add.append(os.path.join(cuda_toolkit_path, "bin"))
 for path in paths_to_add:
     sys.path.insert(0, path)
 PYTHONPATH_separator = ":" if platform.system() != "Windows" else ";"
