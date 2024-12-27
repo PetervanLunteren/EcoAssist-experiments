@@ -11,6 +11,11 @@ import platform
 # check os
 system = platform.system()
 
+# Open log file to capture output
+log_file = "EcoAssist_debug_log.txt"
+sys.stdout = open(log_file, 'w')  # Redirect standard output to file
+sys.stderr = sys.stdout  # Redirect standard error to the same file
+
 # os dependent preparation
 def run_os_dependent_preparation_tasks():
     msg = "Starting EcoAssist...\n\nThis may take a few minutes initially as dependencies, "\
@@ -70,11 +75,6 @@ print(f"   python_executable: {python_executable}")
 
 # cuda toolkit
 cuda_toolkit_path = os.environ.get("CUDA_HOME") or os.environ.get("CUDA_PATH")
-# if cuda_toolkit_path:
-#     cuda_toolkit_path = os.path.join(cuda_toolkit_path, "bin")
-#     current_path = os.environ.get("PATH", "")
-#     if cuda_toolkit_path not in current_path:
-#         os.environ["PATH"] = current_path + os.pathsep + cuda_toolkit_path
 print(f"   cuda_toolkit_path: {cuda_toolkit_path}")
 
 # run the GUI script
