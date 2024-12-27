@@ -106,6 +106,11 @@ from tkinter import filedialog, ttk, messagebox as mb
 from folium.plugins import HeatMap, Draw, MarkerCluster
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+# check if the script is ran from the macOS installer executable
+# if so, don't actually execute the script - it is meant just for installation purposes
+if sys.argv[1] == "installer":
+    exit()
+
 # set global variables
 EcoAssist_files = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 ImageFile.LOAD_TRUNCATED_IMAGES = True
@@ -114,7 +119,7 @@ DET_DIR = os.path.join(EcoAssist_files, "models", "det")
 
 # set environment variables
 if os.name == 'nt': # windows
-    env_dir_fpath = os.path.join(EcoAssist_files, "envs") # TODO
+    env_dir_fpath = os.path.join(EcoAssist_files, "envs")
 elif platform.system() == 'Darwin': # macos
     env_dir_fpath = os.path.join(EcoAssist_files, "envs")
 else: # linux
