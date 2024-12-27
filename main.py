@@ -53,7 +53,7 @@ first_startup_file = os.path.join(EcoAssist_files, "first-startup.txt")
 
 # prepare files for windows (will be run via the normal executable)
 if os.path.exists(first_startup_file) and system == 'Windows':
-    run_os_dependent_preparation_tasks()
+    run_os_dependent_preparation_tasks('Windows')
 
 # check windows debug exe
 windows_debug_mode = True if sys.executable.endswith("debug.exe") else False
