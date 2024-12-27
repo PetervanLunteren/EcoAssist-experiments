@@ -162,8 +162,12 @@ jobs:
           $conda_exe clean --all --yes
 
           ### move and rename executables
-          mv "${HOME}/dist/main" "${root}/EcoAssist ${RELEASE_VERSION} debug"
-          mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
+          mv "${HOME}/dist/main" "${root}/main"
+          mv "${HOME}/dist/main.app" "${root}/main.app"
+
+          # ### move and rename executables DEBUG
+          # mv "${HOME}/dist/main" "${root}/EcoAssist ${RELEASE_VERSION} debug"
+          # mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"
 
       - name: Zip folder contents
         run: |
