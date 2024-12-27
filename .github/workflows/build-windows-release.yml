@@ -146,21 +146,26 @@ jobs:
       #   run: |
       #     "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist"
       
+      # - name: Create self-extracting 7z archive
+      #   shell: cmd
+      #   run: |
+      #     set 7z_path="C:\Program Files\7-Zip\7z.exe"
+      #     set archive_name="windows-${{ env.RELEASE_VERSION }}.7z"
+      #     set sfx_name="windows-${{ env.RELEASE_VERSION }}.exe"
+      
+      #     rem Create the 7z archive
+      #     "%7z_path%" a -t7z -mx9 "%archive_name%" "%USERPROFILE%\EcoAssist"
+      
+      #     rem Create the self-extracting archive
+      #     "%7z_path%" a -sfx7z.sfx -t7z "%sfx_name%" "%archive_name%"
+      
+      #     rem Clean up the intermediate 7z file if not needed
+      #     del "%archive_name%"
+
       - name: Create self-extracting 7z archive
         shell: cmd
         run: |
-          set 7z_path="C:\Program Files\7-Zip\7z.exe"
-          set archive_name="windows-${{ env.RELEASE_VERSION }}.7z"
-          set sfx_name="windows-${{ env.RELEASE_VERSION }}.exe"
-      
-          rem Create the 7z archive
-          "%7z_path%" a -t7z -mx9 "%archive_name%" "%USERPROFILE%\EcoAssist"
-      
-          rem Create the self-extracting archive
-          "%7z_path%" a -sfx7z.sfx -t7z "%sfx_name%" "%archive_name%"
-      
-          rem Clean up the intermediate 7z file if not needed
-          del "%archive_name%"
+          "C:\Program Files\7-Zip\7z.exe" a -sfx7z.sfx -t7z -mx9 "install-EcoAssist-${{ env.RELEASE_VERSION }}.exe" "%USERPROFILE%\EcoAssist"
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
