@@ -12,7 +12,6 @@ jobs:
 
     env:
       RELEASE_VERSION: ${{ github.event.release.tag_name }}
-      # RELEASE_VERSION: v5.22
       BUCKET_NAME: github-release-files-storage
       CONDA_DIR: C:\Miniconda
 
@@ -142,16 +141,10 @@ jobs:
       #     call "%conda_exe%" clean --all --yes --force-pkgs-dirs
       #     call "%conda_exe%" clean --all --yes
 
-      # - name: Zip folder contents
-      #   run: |
-      #     cd %USERPROFILE%
-      #     cd $env:USERPROFILE
-      #     Compress-Archive -Path "EcoAssist\*" -DestinationPath "windows-${{ env.RELEASE_VERSION }}.zip"
-
       - name: Zip folder contents with 7-Zip
         shell: cmd
         run: |
-          "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist\*"
+          "C:\Program Files\7-Zip\7z.exe" a -tzip "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist"
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
@@ -183,16 +176,6 @@ jobs:
           set LATEST_FILE_NAME=windows-latest.zip
           gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
 
-      # - name: Authenticate GitHub CLI
-      #   shell: cmd
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     @echo off
-      #     echo %GITHUB_TOKEN% | gh auth login --with-token --hostname github.com
-      #     gh auth status
-
-
       - name: Get the release body
         shell: pwsh
         run: Invoke-RestMethod -Uri https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.release.tag_name }} | ForEach-Object { $_.body } | Out-File -FilePath release_body.txt -Encoding utf8
@@ -210,46 +193,3 @@ jobs:
           @echo off
           set RELEASE_NAME=${{ github.ref_name }}
           gh release edit %RELEASE_NAME% --notes-file release_body.txt
-
-
-      # - name: Get the release body
-      #   shell: cmd
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     for /f "tokens=*" %%A in ('gh release view %RELEASE_NAME% --json body -q ".body"') do set RELEASE_BODY=%%A
-      #     echo %RELEASE_BODY% > release_body.txt
-
-      # - name: Append link to release body
-      #   shell: cmd
-      #   run: |
-      #     @echo off
-      #     setlocal EnableDelayedExpansion
-      #     set RELEASE_VERSION=${{ env.RELEASE_VERSION }}
-      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
-      #     set RELEASE_BODY=
-      #     for /f "tokens=*" %%A in (release_body.txt) do set RELEASE_BODY=!RELEASE_BODY!%%A
-      #     set NEW_LINK=- Install for **Windows**: [windows-%RELEASE_VERSION%.zip](https://storage.googleapis.com/%BUCKET_NAME%/%RELEASE_VERSION%/windows-%RELEASE_VERSION%.zip)
-      #     echo !RELEASE_BODY! > new_release_body.txt
-      #     echo !NEW_LINK! >> new_release_body.txt
-      #     endlocal
-
-      # - name: Update the release body
-      #   shell: cmd
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
-
-      # - name: Update the release body
-      #   shell: cmd
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     set NEW_RELEASE_BODY=
-      #     for /f "tokens=*" %%A in (new_release_body.txt) do set NEW_RELEASE_BODY=!NEW_RELEASE_BODY!%%A
-      #     echo !NEW_RELEASE_BODY! | gh release edit %RELEASE_NAME% --notes-file new_release_body.txt
-
-  
