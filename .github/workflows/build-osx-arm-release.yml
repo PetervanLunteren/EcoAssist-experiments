@@ -77,7 +77,7 @@ jobs:
           rm -rf "${root}/yolov5_versions/yolov5_new/yolov5/.git"
           echo "yolov5 new version cloned"
           
-          git clone --depth 1 https://github.com/PetervanLunteren/Human-in-the-loop.git "${root}/Human-in-the-loop"
+          git clone --branch pyside6 --depth 1 https://github.com/PetervanLunteren/Human-in-the-loop.git "${root}/Human-in-the-loop"
           rm -rf "${root}/Human-in-the-loop/.git"
           echo "Human-in-the-loop cloned"
           
