@@ -23,7 +23,7 @@ def run_os_dependent_preparation_tasks(os_name):
             creationflags=subprocess.CREATE_NO_WINDOW)
     elif os_name == 'Darwin':
         print("\n")
-        print("Checking files... (this can take a minute)")
+        print("Checking files... (this can take a minute...)")
         subprocess.run(['xattr', '-dr', 'com.apple.quarantine', EcoAssist_files])   # remove attributes
     elif os_name == 'Linux':
         subprocess.Popen(['zenity', '--info', '--text', msg])
@@ -65,12 +65,12 @@ print(f" macos_installer_mode: {macos_installer_mode}")
 
 # log
 print(f"      EcoAssist_files: {EcoAssist_files}")
-print(f"       sys.executable: {sys.executable}")
-print(f"           GUI_script: {GUI_script}")
+print(f"       sys.executable: {sys.executable.replace(EcoAssist_files, '.')}")
+print(f"           GUI_script: {GUI_script.replace(EcoAssist_files, '.')}")
 
 # python executable
 python_executable = get_python_interprator("base")
-print(f"    python_executable: {python_executable}")
+print(f"    python_executable: {python_executable.replace(EcoAssist_files, '.')}")
 
 # cuda toolkit
 cuda_toolkit_path = os.environ.get("CUDA_HOME") or os.environ.get("CUDA_PATH")
@@ -79,8 +79,9 @@ print(f"    cuda_toolkit_path: {cuda_toolkit_path}")
 # prepare files for macos (will be run via installer executable)
 if macos_installer_mode:
     run_os_dependent_preparation_tasks("Darwin")
-    print("Loading dependencies and environments... (this can take a minute)")
+    print("Loading dependencies and environments... (this can take a minute...)")
     subprocess.run([get_python_interprator("base"), GUI_script, "installer"])
+    print("\n\nInstallation is done! You can close this window now and open EcoAssist by double clicking the APP file.\n\n")
     sys.exit()
 
 # run the GUI script
