@@ -18,11 +18,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Debug dependencies
+      # - name: Debug dependencies
+      #   run: |
+      #     root="$HOME/EcoAssist"
+      #     mkdir -p "${root}"
+      #     git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "${root}/visualise_detection"
+
+      - name: Install Miniforge
         run: |
-          root="$HOME/EcoAssist"
-          mkdir -p "${root}"
-          git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "${root}/visualise_detection"
+          mkdir "$HOME/miniforge"
+          curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh" -o miniforge.sh
+          bash miniforge.sh -b -u -p "$HOME/miniforge"
+          echo "succesfully installed at $HOME/miniforge"
 
       - name: Install dependencies
         run: |
@@ -82,13 +89,13 @@ jobs:
           curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "${root}/models/det/MegaDetector 5a/md_v5a.0.0.pt"
           
           ### source conda 
-          source "/usr/share/miniconda/etc/profile.d/conda.sh"
-          source "/usr/share/miniconda/bin/activate"
-          conda_exe="/usr/share/miniconda/bin/conda"
+          source "$HOME/miniforge/etc/profile.d/conda.sh"
+          source "$HOME/miniforge/bin/activate"
+          conda_exe="$HOME/miniforge/bin/conda"
 
           ### install mamba
           $conda_exe install mamba -n base -c conda-forge -y
-          conda_exe="/usr/share/miniconda/bin/mamba"
+          conda_exe="$HOME/miniforge/bin/mamba"
           
           ### install env-base
           $conda_exe env create --file="${root}/cameratraps/envs/environment-detector.yml" -p "${root}/envs/env-base"
