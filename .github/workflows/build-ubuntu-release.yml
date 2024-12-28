@@ -116,9 +116,17 @@ jobs:
           $conda_exe run -p "${root}/envs/env-base" pip install PySide6
           $conda_exe run -p "${root}/envs/env-base" pip install "lxml==4.6.3"
           "${root}/envs/env-base/bin/pyside6-rcc" -o "${root}/Human-in-the-loop/libs/resources.py" "${root}/Human-in-the-loop/resources.qrc"
+
+          ### clean
+          $conda_exe clean --all --yes --force-pkgs-dirs
+          $conda_exe clean --all --yes
           
           ### install env-tensorflow
           $conda_exe env create --file="${root}/EcoAssist/classification_utils/envs/tensorflow-linux-windows.yml" -p "${root}/envs/env-tensorflow"
+
+          ### clean
+          $conda_exe clean --all --yes --force-pkgs-dirs
+          $conda_exe clean --all --yes
           
           ### install env-pytorch
           $conda_exe create -p "${root}/envs/env-pytorch" python=3.8 -y
@@ -129,12 +137,20 @@ jobs:
           $conda_exe run -p "${root}/envs/env-pytorch" pip install "jsonpickle==3.0.2"
           $conda_exe run -p "${root}/envs/env-pytorch" pip install timm
           $conda_exe run -p "${root}/envs/env-pytorch" pip install dill
+
+          ### clean
+          $conda_exe clean --all --yes --force-pkgs-dirs
+          $conda_exe clean --all --yes
           
           ### install env-pywildlife
           $conda_exe create -p "${root}/envs/env-pywildlife" python=3.8 -y
           $conda_exe run -p "${root}/envs/env-pywildlife" pip install pytorchwildlife
           $conda_exe run -p "${root}/envs/env-pywildlife" pip install "setuptools<70"
           $conda_exe run -p "${root}/envs/env-pywildlife" pip install jsonpickle
+
+          ### clean
+          $conda_exe clean --all --yes --force-pkgs-dirs
+          $conda_exe clean --all --yes
 
           ### run pyinstaller from fresh environment
           $conda_exe create -p "$HOME/miniforge/envs/env-fresh" python=3.8 pyinstaller -y
