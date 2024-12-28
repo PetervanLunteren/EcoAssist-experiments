@@ -89,18 +89,13 @@ jobs:
           curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "${root}/models/det/MegaDetector 5a/md_v5a.0.0.pt"
           
           ### source conda 
-          if [ -f "/Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh" ]; then
-              source "/Applications/.EcoAssist_files/miniforge/etc/profile.d/conda.sh"
-              source "/Applications/.EcoAssist_files/miniforge/bin/activate"
-              conda_exe="/Applications/.EcoAssist_files/miniforge/bin/conda"
-              echo "Conda found in /Applications/.EcoAssist_files/miniforge"
-          fi
-          if [ -f "$HOME/miniforge/etc/profile.d/conda.sh" ]; then
-              source "$HOME/miniforge/etc/profile.d/conda.sh"
-              source "$HOME/miniforge/bin/activate"
-              conda_exe="$HOME/miniforge/bin/conda"
-              echo "Conda found in $HOME/miniforge"
-          fi
+          source "$HOME/miniforge/etc/profile.d/conda.sh"
+          source "$HOME/miniforge/bin/activate"
+          conda_exe="$HOME/miniforge/bin/conda"
+
+          ### install mamba
+          $conda_exe install mamba -n base -c conda-forge -y
+          conda_exe="$HOME/miniforge/bin/mamba"
           
           ### install env-base
           $conda_exe env create --file="${root}/cameratraps/envs/environment-detector-m1.yml" -p "${root}/envs/env-base"
