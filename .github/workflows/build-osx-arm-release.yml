@@ -160,7 +160,9 @@ jobs:
       - name: Zip folder contents
         run: |
           cd "$HOME"
-          zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist"
+          # zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist" # DEBUG
+          # tar -czvf "osx-arm-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist" # DEBUG
+          tar -caf "osx-arm-${{ env.RELEASE_VERSION }}.tar.xz" EcoAssist
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
@@ -180,8 +182,8 @@ jobs:
           BUCKET_NAME="${{ env.BUCKET_NAME }}"
           PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
           LATEST_FOLDER_NAME="latest"
-          PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.zip"
-          LATEST_FILE_NAME="osx-arm-latest.zip"
+          PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
+          LATEST_FILE_NAME="osx-arm-latest.tar.xz"
 
           # upload release pinned version
           gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
@@ -202,7 +204,7 @@ jobs:
         id: append_link
         run: |
           new_body="$(cat release_body.txt)
-          - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.zip](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.zip)"
+          - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.tar.xz](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz)"
           echo "$new_body" > new_release_body.txt
   
       - name: Update the release body
