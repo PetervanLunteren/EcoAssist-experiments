@@ -103,33 +103,33 @@ jobs:
           @REM DEBUG
           set conda_exe=${{ env.CONDA_DIR }}\condabin\mamba.bat
           
-          @REM env-base
-          call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision -y 
-          call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
-          
-          @REM env-pytorch
-          call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
-          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
-          
-          @REM env-tensorflow
-          call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
+          @REM @REM env-base
+          @REM call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision -y 
+          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+          @REM 
+          @REM @REM env-pytorch
+          @REM call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
+          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
+          @REM 
+          @REM @REM env-tensorflow
+          @REM call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
           
           @REM install PyInstaller
           call "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
