@@ -146,12 +146,10 @@ jobs:
           call "%conda_exe%" clean --all --yes --force-pkgs-dirs
           call "%conda_exe%" clean --all --yes
 
-      - name: Create self-extracting zip archive
+      - name: Create archive
         shell: cmd
         run: |
-          @REM "C:\Program Files\7-Zip\7z.exe" a -sfx7z.sfx -mx9 "windows-${{ env.RELEASE_VERSION }}.exe" "%USERPROFILE%\EcoAssist"
-          "C:\Program Files\7-Zip\7z.exe" a -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.7z" "%USERPROFILE%\EcoAssist"
-          @REM "C:\Program Files\7-Zip\7z.exe" a -tzip -mx9 "windows-${{ env.RELEASE_VERSION }}.zip" "%USERPROFILE%\EcoAssist"
+          "C:\Program Files\7-Zip\7z.exe" a -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.7z" "%USERPROFILE%\EcoAssist\*"
 
       - name: Authenticate with Google Cloud
         uses: google-github-actions/auth@v1
