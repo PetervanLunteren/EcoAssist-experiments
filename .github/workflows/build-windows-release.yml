@@ -230,6 +230,16 @@ jobs:
         run: |
           set root=%USERPROFILE%\EcoAssist
           echo root=%root%
+          echo newFile.nsi="%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
+          echo new_file="%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
+          echo Listing contents of %root%:
+          dir "%root%"
+          echo Listing contents of %root%\install_files\:
+          dir "%root%\install_files\"
+          echo Listing contents of %root%\install_files\windows:
+          dir "%root%\install_files\windows"
+
+          
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
           type "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
           move /Y newFile.nsi "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
