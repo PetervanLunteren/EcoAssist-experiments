@@ -17,15 +17,21 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Download Nsis7z plugin for NSIS
-      uses: carlosperate/download-file-action@v1.0.3
-      with:
-        file-url: https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip
-        file-name: Nsis7z_plugin.zip
-        location: ${{ github.workspace }}
+    - name: Install Nsis7z Plugin
+      run: |
+        curl -L -o "${{ github.workspace }}/Nsis7z_plugin.zip" "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
+        tar -xf "${{ github.workspace }}/Nsis7z_plugin.zip"
+        7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
 
-    - name: Extract Nsis7z plugin
-      run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
+    # - name: Download Nsis7z plugin for NSIS
+    #   uses: carlosperate/download-file-action@v1.0.3
+    #   with:
+    #     file-url: https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip
+    #     file-name: Nsis7z_plugin.zip
+    #     location: ${{ github.workspace }}
+
+    # - name: Extract Nsis7z plugin
+    #   run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
 
     - name: Install Inetc Plugin
       run: |
