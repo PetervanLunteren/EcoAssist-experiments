@@ -10,7 +10,15 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-        
+
+    - name: Verify Extraction
+      shell: pwsh
+      run: |
+        curl -L -o Nsis7z.zip "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
+        tar -xf Nsis7z.zip
+        Get-ChildItem -Path . -Recurse
+
+  
     - name: Install Nsis7z Extension
       shell: pwsh
       run: |
