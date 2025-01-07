@@ -45,7 +45,8 @@ jobs:
       with:
         script-file: "${{ env.NSIS_DIR }}/nsis-install-compiler.nsi"
         additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
-        
+
+
     - name: Get Upload URL for Release
       id: get_release
       uses: actions/github-script@v6
@@ -56,22 +57,44 @@ jobs:
             repo: context.repo.repo,
             tag: '${{ env.RELEASE_VERSION }}',
           })
-          // Output the upload_url
-          core.setOutput('upload_url', release.data.upload_url)
+          // Write the upload URL to the environment file instead of using set-output
+          const fs = require('fs');
+          fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
+    
     
     - name: Upload Asset to GitHub Release
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: ${{ steps.get_release.outputs.upload_url }}
+        upload_url: ${{ env.UPLOAD_URL }}  # Use the updated environment variable
         asset_path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
-        asset_content_type: application/octet-stream 
+        asset_content_type: application/octet-stream
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
 
-    # - name: Upload Artifact
-    #   uses: actions/upload-artifact@v4
+        
+    # - name: Get Upload URL for Release
+    #   id: get_release
+    #   uses: actions/github-script@v6
     #   with:
-    #     name: nsis-installer
-    #     path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+    #     script: |
+    #       const release = await github.rest.repos.getReleaseByTag({
+    #         owner: context.repo.owner,
+    #         repo: context.repo.repo,
+    #         tag: '${{ env.RELEASE_VERSION }}',
+    #       })
+    #       // Output the upload_url
+    #       core.setOutput('upload_url', release.data.upload_url)
+    
+    # - name: Upload Asset to GitHub Release
+    #   uses: actions/upload-release-asset@v1
+    #   with:
+    #     upload_url: ${{ steps.get_release.outputs.upload_url }}
+    #     asset_path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+    #     asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+    #     asset_content_type: application/octet-stream 
+    #   env:
+    #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+
 
