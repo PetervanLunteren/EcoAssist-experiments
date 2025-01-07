@@ -31,13 +31,10 @@ jobs:
 
     - name: Append VERSION to NSIS script
       run: |
-        $version = "!define VERSION `\"${{ env.RELEASE_VERSION }}\"`"
-        $nsisScript = "${{ env.NSIS_SCRIPT }}"
-        $tempFile = "$nsisScript.tmp"
-        Set-Content -Path $tempFile -Value $version -Encoding UTF8
-        Get-Content -Path $nsisScript | Add-Content -Path $tempFile
-        Move-Item -Force -Path $tempFile -Destination $nsisScript
-      shell: pwsh
+        echo "!define VERSION \"${{ github.event.release.tag_name }}\"" > newFile.nsi
+        type "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
+        move /Y newFile.nsi "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi"
+      shell: cmd
 
     - name: Create nsis installer
       uses: joncloud/makensis-action@publish
