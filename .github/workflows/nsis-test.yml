@@ -11,7 +11,7 @@ jobs:
       RELEASE_VERSION: 5.111
       BUCKET_NAME: github-release-files-storage
       CONDA_DIR: C:\Miniconda
-      NSIS_SCRIPT: D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi
+      NSIS_DIR: D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows
 
     steps:
     - name: Checkout code
@@ -39,14 +39,14 @@ jobs:
     - name: Create nsis installer
       uses: joncloud/makensis-action@publish
       with:
-        script-file: "${{ env.NSIS_SCRIPT }}"
+        script-file: "${{ env.NSIS_DIR }}\nsis-install-compiler.nsi"
         additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: nsis-installer
-        path: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+        path: "${{ env.NSIS_DIR }}\EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         
 
 
