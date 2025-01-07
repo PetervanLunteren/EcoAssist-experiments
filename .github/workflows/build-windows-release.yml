@@ -1,9 +1,9 @@
 name: Build Windows release
 
 on:
-  # release:
-  #   types:
-  #     - published
+  release:
+    types:
+      - published
   workflow_dispatch:
 
 jobs:
@@ -198,3 +198,55 @@ jobs:
           @echo off
           set RELEASE_NAME=${{ github.ref_name }}
           gh release edit %RELEASE_NAME% --notes-file release_body.txt
+
+      - name: Install Nsis7z Plugin
+        run: |
+          curl -L -o "${{ github.workspace }}/Nsis7z_plugin.zip" "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
+          tar -xf "${{ github.workspace }}/Nsis7z_plugin.zip"
+          7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
+  
+      - name: Install Inetc Plugin
+        run: |
+          curl -L -o "${{ github.workspace }}/Inetc_plugin.zip" "https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip"
+          tar -xf "${{ github.workspace }}/Inetc_plugin.zip"
+          7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
+  
+      - name: Append VERSION to NSIS script
+        run: |
+          set root=%USERPROFILE%\EcoAssist
+          echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
+          type "%root%\EcoAssist\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
+          move /Y newFile.nsi "%root%\EcoAssist\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
+        shell: cmd
+  
+      - name: Create nsis installer
+        uses: joncloud/makensis-action@publish
+        with:
+          script-file: "%root%/EcoAssist/EcoAssist/install_files/windows/nsis-install-compiler.nsi"
+          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
+  
+  
+      - name: Get Upload URL for Release
+        id: get_release
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: '${{ env.RELEASE_VERSION }}',
+            })
+            // Write the upload URL to the environment file instead of using set-output
+            const fs = require('fs');
+            fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
+      
+      
+      - name: Upload Asset to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ env.UPLOAD_URL }}  # Use the updated environment variable
+          asset_path: "%root%/EcoAssist/EcoAssist/install_files/windows/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+          asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
