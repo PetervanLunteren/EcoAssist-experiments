@@ -45,11 +45,23 @@ jobs:
       with:
         script-file: "${{ env.NSIS_DIR }}/nsis-install-compiler.nsi"
         additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
-
-    - name: Upload .exe as release asset
+        
+    - name: Get Upload URL for Release
+      id: get_release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const release = await github.rest.repos.getReleaseByTag({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag: 'v${{ env.RELEASE_VERSION }}',
+          })
+          return release.data.upload_url
+    
+    - name: Upload Asset to GitHub Release
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: https://github.com/PetervanLunteren/EcoAssist-experiments/releases/tag/${{ env.RELEASE_VERSION }}
+        upload_url: ${{ steps.get_release.outputs.upload_url }}
         asset_path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         asset_content_type: application/octet-stream
