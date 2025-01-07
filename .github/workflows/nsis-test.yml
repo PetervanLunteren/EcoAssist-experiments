@@ -43,7 +43,7 @@ jobs:
         additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
 
     - name: Upload Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: nsis-installer
         path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
