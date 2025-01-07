@@ -39,31 +39,12 @@ jobs:
     - name: Create nsis installer
       uses: joncloud/makensis-action@publish
       with:
-        script-file: "${{ env.NSIS_DIR }}\nsis-install-compiler.nsi"
+        script-file: "${{ env.NSIS_DIR }}/nsis-install-compiler.nsi"
         additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
       with:
         name: nsis-installer
-        path: "${{ env.NSIS_DIR }}\EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
-        
+        path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
 
-
-    # - name: Install Inetc Plugin
-    #   run: |
-    #     curl -L -o Inetc.zip "https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip"
-    #     tar -xf Inetc.zip
-    #     copy /y "Inetc\\Plugins\\amd64-unicode\\*.*" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
-    #     copy /y "Inetc\\Plugins\\x86-ansi\\*.*" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
-    #     copy /y "Inetc\\Plugins\\x86-unicode\\*.*" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
-
-    # - name: Build Installer
-    #   run: |
-    #     makensis installer_script.nsi
-
-    # - name: Upload Artifact
-    #   uses: actions/upload-artifact@v3
-    #   with:
-    #     name: nsis-installer
-    #     path: installer.exe
