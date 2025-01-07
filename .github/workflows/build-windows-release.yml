@@ -216,11 +216,12 @@ jobs:
           7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
   
       - name: Append VERSION to NSIS script
-        run: |
-          echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
-          type "%USERPROFILE%\EcoAssist\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
-          move /Y newFile.nsi "%USERPROFILE%\EcoAssist\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
         shell: cmd
+        run: |
+          set root=%USERPROFILE%\EcoAssist
+          echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
+          type "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
+          move /Y newFile.nsi "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
   
       - name: Create nsis installer
         uses: joncloud/makensis-action@publish
