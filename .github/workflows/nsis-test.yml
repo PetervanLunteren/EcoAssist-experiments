@@ -31,7 +31,7 @@ jobs:
 
     - name: Append VERSION to NSIS script
       run: |
-        echo !define VERSION \"${{ env.RELEASE_VERSION }}\" > newFile.nsi
+        echo !define VERSION "${{ github.event.release.tag_name }}" > newFile.nsi
         type "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
         move /Y newFile.nsi "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi"
       shell: cmd
