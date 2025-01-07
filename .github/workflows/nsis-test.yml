@@ -7,19 +7,59 @@ jobs:
   build-installer:
     runs-on: windows-latest
 
+    env:
+      RELEASE_VERSION: ${{ github.event.release.tag_name }}
+      BUCKET_NAME: github-release-files-storage
+      CONDA_DIR: C:\Miniconda
+      NSIS_SCRIPT: D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Install Nsis7z Extension
-      shell: pwsh
+    - name: Download Nsis7z plugin for NSIS
+      uses: carlosperate/download-file-action@v1.0.3
+      with:
+        file-url: https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip
+        file-name: Nsis7z_plugin.zip
+        location: ${{ github.workspace }}
+
+    - name: Extract Nsis7z plugin
+      run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
+
+    - name: Download Inetc plugin for NSIS
+      uses: carlosperate/download-file-action@v1.0.3
+      with:
+        file-url: https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
+        file-name: Inetc_plugin.zip
+        location: ${{ github.workspace }}
+
+    - name: Extract Nsis7z plugin
+      run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
+
+    - name: Append VERSION to NSIS script
       run: |
-        cd "$env:USERPROFILE"
-        curl -L -o Nsis7z.zip "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
-        tar -xf Nsis7z.zip
-        Copy-Item -Path "Nsis7z\\x64-Unicode\\nsis7z.dll" -Destination "C:\\Program Files (x86)\\NSIS\\Plugins\\" -Force
+        $version = "!define VERSION `\"${{ env.RELEASE_VERSION }}\"`"
+        $nsisScript = "${{ env.NSIS_SCRIPT }}"
+        $tempFile = "$nsisScript.tmp"
+        Write-Output $version | Out-File -Encoding UTF8 $tempFile
+        Get-Content -Path $nsisScript | Add-Content -Path $tempFile
+        Move-Item -Force -Path $tempFile -Destination $nsisScript
+      env:
+        RELEASE_VERSION: ${{ github.event.release.tag_name }}
+        NSIS_SCRIPT: D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi
 
+    - name: Create nsis installer
+      uses: joncloud/makensis-action@publish
+      with:
+        script-file: "${{ env.NSIS_SCRIPT }}"
+        additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
 
+    - name: Upload artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: installsig.exe
+        path: installsig.exe
         
 
 
