@@ -15,7 +15,7 @@ jobs:
       shell: pwsh
       run: |
         cd "$env:USERPROFILE"
-        curl -L -o Nsis7z.zip "https://prdownloads.sourceforge.net/nsis/nsis-3.10-setup.exe?download"
+        curl -L -o Nsis7z.zip "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
         tar -xf Nsis7z.zip
         Copy-Item -Path "Nsis7z\\x64-Unicode\\nsis7z.dll" -Destination "C:\\Program Files (x86)\\NSIS\\Plugins\\" -Force
 
