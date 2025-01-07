@@ -214,11 +214,21 @@ jobs:
           curl -L -o "${{ github.workspace }}/Inetc_plugin.zip" "https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip"
           tar -xf "${{ github.workspace }}/Inetc_plugin.zip"
           7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
+
+      - name: Append VERSION to NSIS script
+        shell: pwsh
+        run: |
+          $root = "$env:USERPROFILE\EcoAssist"
+          $version = "${{ env.RELEASE_VERSION }}"
+          Set-Content -Path "newFile.nsi" -Value "!define VERSION `$version`"
+          Get-Content -Path "$root\install_files\windows\nsis-install-compiler.nsi" | Add-Content -Path "newFile.nsi"
+          Move-Item -Force -Path "newFile.nsi" -Destination "$root\install_files\windows\nsis-install-compiler.nsi"
   
       - name: Append VERSION to NSIS script
         shell: cmd
         run: |
           set root=%USERPROFILE%\EcoAssist
+          echo root=%root%
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
           type "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
           move /Y newFile.nsi "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
