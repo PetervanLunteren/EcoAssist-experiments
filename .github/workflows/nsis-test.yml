@@ -66,6 +66,8 @@ jobs:
         asset_path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         asset_content_type: application/octet-stream 
+      env:
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     # - name: Upload Artifact
     #   uses: actions/upload-artifact@v4
