@@ -23,44 +23,21 @@ jobs:
         tar -xf "${{ github.workspace }}/Nsis7z_plugin.zip"
         7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
 
-    # - name: Download Nsis7z plugin for NSIS
-    #   uses: carlosperate/download-file-action@v1.0.3
-    #   with:
-    #     file-url: https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip
-    #     file-name: Nsis7z_plugin.zip
-    #     location: ${{ github.workspace }}
-
-    # - name: Extract Nsis7z plugin
-    #   run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Nsis7z_plugin.zip"
-
     - name: Install Inetc Plugin
       run: |
         curl -L -o "${{ github.workspace }}/Inetc_plugin.zip" "https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip"
         tar -xf "${{ github.workspace }}/Inetc_plugin.zip"
         7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
 
-    # - name: Download Inetc Plugin
-    #   uses: carlosperate/download-file-action@v1.0.3
-    #   with:
-    #     file-url: https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
-    #     file-name: Inetc_plugin.zip
-    #     location: D:\a\EcoAssist-experiments\EcoAssist-experiments
-
-    # - name: Download Inetc plugin for NSIS
-    #   uses: carlosperate/download-file-action@v1.0.3
-    #   with:
-    #     file-url: https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip
-    #     file-name: Inetc_plugin.zip
-    #     location: ${{ github.workspace }}
-
-    # - name: Extract Nsis7z plugin
-    #   run: 7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
-
     - name: Append VERSION to NSIS script
       run: |
-        echo "!define VERSION `\"${{ github.event.release.tag_name }}\"`" > temp.nsi
-        type "${{ env.NSIS_SCRIPT }}" >> temp.nsi
-        move /Y temp.nsi "${{ env.NSIS_SCRIPT }}"
+        $version = "!define VERSION `\"${{ env.RELEASE_VERSION }}\"`"
+        $nsisScript = "${{ env.NSIS_SCRIPT }}"
+        $tempFile = "$nsisScript.tmp"
+        Set-Content -Path $tempFile -Value $version -Encoding UTF8
+        Get-Content -Path $nsisScript | Add-Content -Path $tempFile
+        Move-Item -Force -Path $tempFile -Destination $nsisScript
+      shell: pwsh
 
     - name: Create nsis installer
       uses: joncloud/makensis-action@publish
