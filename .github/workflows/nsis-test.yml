@@ -2,10 +2,14 @@ name: Build NSIS Installer
 
 on:
   workflow_dispatch:
+  release:
+    types:
+      - published
 
 jobs:
   build-installer:
     runs-on: windows-latest
+
 
     env:
       RELEASE_VERSION: 5.111
