@@ -10,17 +10,13 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-
-    - name: Check NSIS
-      run: |
-        makensis -h
         
-
-    # - name: Install Nsis7z Extension
-    #   run: |
-    #     curl -L -o Nsis7z.zip "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
-    #     tar -xf Nsis7z.zip
-    #     copy /y "Nsis7z\\x64-Unicode\\nsis7z.dll" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
+    - name: Install Nsis7z Extension
+      run: |
+        where makensis
+        curl -L -o Nsis7z.zip "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
+        tar -xf Nsis7z.zip
+        copy /y "Nsis7z\\x64-Unicode\\nsis7z.dll" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
 
     # - name: Install Inetc Plugin
     #   run: |
