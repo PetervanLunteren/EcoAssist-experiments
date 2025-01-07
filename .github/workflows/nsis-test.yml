@@ -31,7 +31,7 @@ jobs:
 
     - name: Append VERSION to NSIS script
       run: |
-        echo "!define VERSION \"${{ github.event.release.tag_name }}\"" > newFile.nsi
+        echo !define VERSION \"${{ env.RELEASE_VERSION }}\" > newFile.nsi
         type "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
         move /Y newFile.nsi "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi"
       shell: cmd
@@ -46,7 +46,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: nsis-installer
-        path: installer.exe
+        path: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
         
 
 
