@@ -1,4 +1,6 @@
 # Script to create an NSIS exe to install EcoAssist on Windows
+# Peter van Lunteren, last edit on 6 Jan 2025
+# Var VERSION will be defined by github actions by adding a line above like '!define VERSION "v6.34"'
 
 # Name and output location for the installer
 Outfile "EcoAssist-${VERSION}-windows.exe"
