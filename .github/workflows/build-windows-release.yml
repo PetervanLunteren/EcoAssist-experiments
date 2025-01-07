@@ -145,6 +145,10 @@ jobs:
           @REM conda clean
           call "%conda_exe%" clean --all --yes --force-pkgs-dirs
           call "%conda_exe%" clean --all --yes
+          call ${{ env.CONDA_DIR }}\condabin\mamba.bat clean --all --yes --force-pkgs-dirs
+          call ${{ env.CONDA_DIR }}\condabin\mamba.bat clean --all --yes
+          call ${{ env.CONDA_DIR }}\condabin\conda.bat clean --all --yes --force-pkgs-dirs
+          call ${{ env.CONDA_DIR }}\condabin\conda.bat clean --all --yes
 
       - name: Create archive
         shell: cmd
