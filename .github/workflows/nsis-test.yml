@@ -45,9 +45,6 @@ jobs:
         Write-Output $version | Out-File -Encoding UTF8 $tempFile
         Get-Content -Path $nsisScript | Add-Content -Path $tempFile
         Move-Item -Force -Path $tempFile -Destination $nsisScript
-      env:
-        RELEASE_VERSION: ${{ github.event.release.tag_name }}
-        NSIS_SCRIPT: D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\nsis-install-compiler.nsi
 
     - name: Create nsis installer
       uses: joncloud/makensis-action@publish
