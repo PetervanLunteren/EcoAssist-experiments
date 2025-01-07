@@ -23,6 +23,7 @@ jobs:
         shell: cmd
         run: |
           set root=%USERPROFILE%\EcoAssist
+          echo root=%root%
           mkdir "%root%"
           git clone --depth 1 https://github.com/PetervanLunteren/visualise_detection.git "%root%\visualise_detection"
 
