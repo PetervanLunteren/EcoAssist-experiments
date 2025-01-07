@@ -65,7 +65,7 @@ jobs:
           upload_url: ${{ steps.get_release.outputs.upload_url }}
           asset_path: "${{ env.NSIS_DIR }}/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
           asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
-          asset_content_type: application/octet-stream
+          asset_content_type: application/octet-stream 
 
     # - name: Upload Artifact
     #   uses: actions/upload-artifact@v4
