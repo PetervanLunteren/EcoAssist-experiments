@@ -1,0 +1,42 @@
+name: Build NSIS Installer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-installer:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up NSIS
+      run: |
+        curl -L -o nsis-setup.exe "https://prdownloads.sourceforge.net/nsis/nsis-3.10-setup.exe?download"
+        start /wait nsis-setup.exe /S
+        echo "::add-path::C:\\Program Files (x86)\\NSIS"
+
+    - name: Install Nsis7z Extension
+      run: |
+        curl -L -o Nsis7z.zip "https://nsis.sourceforge.io/mediawiki/images/9/93/Nsis7z.zip"
+        tar -xf Nsis7z.zip
+        copy /y "Nsis7z\\x64-Unicode\\nsis7z.dll" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
+
+    - name: Install Inetc Plugin
+      run: |
+        curl -L -o Inetc.zip "https://nsis.sourceforge.io/mediawiki/images/c/c9/Inetc.zip"
+        tar -xf Inetc.zip
+        copy /y "Inetc\\Plugins\\amd64-unicode\\*.*" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
+        copy /y "Inetc\\Plugins\\x86-ansi\\*.*" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
+        copy /y "Inetc\\Plugins\\x86-unicode\\*.*" "C:\\Program Files (x86)\\NSIS\\Plugins\\"
+
+    - name: Build Installer
+      run: |
+        makensis installer_script.nsi
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: nsis-installer
+        path: installer.exe
