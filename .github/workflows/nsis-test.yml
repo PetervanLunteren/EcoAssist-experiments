@@ -13,7 +13,7 @@ jobs:
 
     - name: Check NSIS
       run: |
-        nsis -h
+        makensis -h
         
 
     # - name: Install Nsis7z Extension
