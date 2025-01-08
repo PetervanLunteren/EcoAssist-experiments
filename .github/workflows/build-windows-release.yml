@@ -99,11 +99,11 @@ jobs:
           @REM MegaDetector model 5A
           curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
 
-          @REM install mamba
-          call "%conda_exe%" install -n base -c conda-forge mamba -y
-          @REM DEBUG
-          set conda_exe=${{ env.CONDA_DIR }}\condabin\mamba.bat
-          
+          @REM @REM install mamba
+          @REM call "%conda_exe%" install -n base -c conda-forge mamba -y
+          @REM @REM DEBUG
+          @REM set conda_exe=${{ env.CONDA_DIR }}\condabin\mamba.bat
+          @REM 
           @REM @REM env-base
           @REM call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
           @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
