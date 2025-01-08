@@ -13,6 +13,9 @@ Var archiveName
 !include MUI2.nsh
 !include Sections.nsh
 
+# Set execution level
+RequestExecutionLevel user
+
 # UI Pages
 Name "EcoAssist"
 !define MUI_PAGE_HEADER_TEXT "Step 1 of 3"
