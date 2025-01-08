@@ -243,25 +243,12 @@ jobs:
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
           type "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
           move /Y newFile.nsi "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
-
-      - name: Set NSIS Script Path
-        shell: cmd
-        run: |
-          set SCRIPT_PATH=%USERPROFILE%\EcoAssist\EcoAssist\install_files\windows\nsis-install-compiler.nsi
-          echo SCRIPT_PATH=%SCRIPT_PATH% >> $GITHUB_ENV
-      
-      - name: Create NSIS Installer
+  
+      - name: Create NSIS installer
         uses: joncloud/makensis-action@publish
         with:
-          script-file: ${{ env.SCRIPT_PATH }}
-          additional-plugin-paths: D:\a\EcoAssist-experiments\EcoAssist-experiments/NSIS_Plugins/Plugins
-  
-      # - name: Create nsis installer
-      #   uses: joncloud/makensis-action@publish
-      #   with:
-      #     script-file: "%USERPROFILE%/EcoAssist/EcoAssist/install_files/windows/nsis-install-compiler.nsi"
-      #     additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
-  
+          script-file: "install_files/windows/nsis-install-compiler.nsi"
+          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
   
       - name: Get Upload URL for Release
         id: get_release
@@ -276,7 +263,6 @@ jobs:
             // Write the upload URL to the environment file instead of using set-output
             const fs = require('fs');
             fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
-      
       
       - name: Upload Asset to GitHub Release
         uses: actions/upload-release-asset@v1
