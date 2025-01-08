@@ -17,7 +17,7 @@ Var archiveName
 RequestExecutionLevel user
 
 # UI Pages
-Name "EcoAssist"
+Name "EcoAssist ${VERSION}"
 !define MUI_PAGE_HEADER_TEXT "Step 1 of 3"
 !define MUI_PAGE_HEADER_SUBTEXT "Uninstalling previous EcoAssist version..."
 !define MUI_FINISHPAGE_TITLE "Installation Complete!"
