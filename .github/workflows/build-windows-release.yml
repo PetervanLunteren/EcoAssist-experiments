@@ -232,23 +232,35 @@ jobs:
           echo root=%root%
           echo newFile.nsi="%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
           echo new_file="%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
-          echo Listing contents of %root%:
-          dir "%root%"
-          echo Listing contents of %root%\install_files\:
-          dir "%root%\install_files\"
-          echo Listing contents of %root%\install_files\windows:
-          dir "%root%\install_files\windows"
+          echo Listing contents of %root%\EcoAssist\:
+          dir "%root%\EcoAssist\"
+          echo Listing contents of %root%\EcoAssist\install_files\:
+          dir "%root%\EcoAssist\install_files\"
+          echo Listing contents of %root%\EcoAssist\install_files\windows:
+          dir "%root%\EcoAssist\install_files\windows"
 
           
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
           type "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
           move /Y newFile.nsi "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
-  
-      - name: Create nsis installer
+
+      - name: Set NSIS Script Path
+        shell: cmd
+        run: |
+          set SCRIPT_PATH=%USERPROFILE%\EcoAssist\EcoAssist\install_files\windows\nsis-install-compiler.nsi
+          echo SCRIPT_PATH=%SCRIPT_PATH% >> $GITHUB_ENV
+      
+      - name: Create NSIS Installer
         uses: joncloud/makensis-action@publish
         with:
-          script-file: "%USERPROFILE%/EcoAssist/EcoAssist/install_files/windows/nsis-install-compiler.nsi"
-          additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
+          script-file: ${{ env.SCRIPT_PATH }}
+          additional-plugin-paths: D:\a\EcoAssist-experiments\EcoAssist-experiments/NSIS_Plugins/Plugins
+  
+      # - name: Create nsis installer
+      #   uses: joncloud/makensis-action@publish
+      #   with:
+      #     script-file: "%USERPROFILE%/EcoAssist/EcoAssist/install_files/windows/nsis-install-compiler.nsi"
+      #     additional-plugin-paths: ${{ github.workspace }}/NSIS_Plugins/Plugins
   
   
       - name: Get Upload URL for Release
