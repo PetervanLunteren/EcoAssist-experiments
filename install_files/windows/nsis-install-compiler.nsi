@@ -51,7 +51,7 @@ Section "Install"
     DetailPrint "Removing previous files... "
     SetOutPath $INSTDIR
 
-    SetDetailsPrint none
+    SetDetailsPrint textonly
     DetailPrint "Deleting files... 0%"
     RMDir /r $INSTDIR/cameratraps
     DetailPrint "Deleting files... 10%"
