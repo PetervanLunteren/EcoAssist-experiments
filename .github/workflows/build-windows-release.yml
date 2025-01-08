@@ -268,7 +268,7 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ env.UPLOAD_URL }}  # Use the updated environment variable
-          asset_path: "%USERPROFILE%/EcoAssist/EcoAssist/install_files/windows/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
+          asset_path: "install_files/windows/EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
           asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-windows.exe"
           asset_content_type: application/octet-stream
         env:
