@@ -241,6 +241,7 @@ jobs:
 
           
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
+          echo !define VERSION "${{ env.RELEASE_VERSION }}"
           type "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
           move /Y newFile.nsi "%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
   
