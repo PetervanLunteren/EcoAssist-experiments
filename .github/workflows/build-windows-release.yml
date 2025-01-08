@@ -99,110 +99,110 @@ jobs:
           @REM MegaDetector model 5A
           curl -L https://github.com/agentmorris/MegaDetector/releases/download/v5.0/md_v5a.0.0.pt -o "%root%/models\det\MegaDetector 5a\md_v5a.0.0.pt"
 
-          @REM @REM install mamba
-          @REM call "%conda_exe%" install -n base -c conda-forge mamba -y
-          @REM @REM DEBUG
-          @REM set conda_exe=${{ env.CONDA_DIR }}\condabin\mamba.bat
-          @REM 
-          @REM @REM env-base
-          @REM call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision -y 
-          @REM call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
-          @REM 
-          @REM @REM env-pytorch
-          @REM call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
-          @REM call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
-          @REM 
-          @REM @REM env-tensorflow
-          @REM call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
-          @REM
-          @REM @REM install PyInstaller
-          @REM call "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
-          @REM 
-          @REM @REM normal executable
-          @REM call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --noconsole --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
-          @REM move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION%.exe"
-          @REM 
-          @REM @REM debug executable
-          @REM call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --console --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
-          @REM move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION% debug.exe"
-          @REM 
-          @REM @REM conda clean
-          @REM call "%conda_exe%" clean --all --yes --force-pkgs-dirs
-          @REM call "%conda_exe%" clean --all --yes
-          @REM call ${{ env.CONDA_DIR }}\condabin\mamba.bat clean --all --yes --force-pkgs-dirs
-          @REM call ${{ env.CONDA_DIR }}\condabin\mamba.bat clean --all --yes
-          @REM call ${{ env.CONDA_DIR }}\condabin\conda.bat clean --all --yes --force-pkgs-dirs
-          @REM call ${{ env.CONDA_DIR }}\condabin\conda.bat clean --all --yes
+          @REM install mamba
+          call "%conda_exe%" install -n base -c conda-forge mamba -y
+          @REM DEBUG
+          set conda_exe=${{ env.CONDA_DIR }}\condabin\mamba.bat
+          
+          @REM env-base
+          call "%conda_exe%" env create --file "%root%\cameratraps\envs\environment-detector.yml" -p "%root%\envs\env-base"
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install pyqt5==5.15.2 lxml
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install RangeSlider gpsphoto exifread piexif openpyxl pyarrow customtkinter CTkTable 
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install GitPython==3.1.30
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install folium plotly
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install numpy==1.23.4
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install pytorchwildlife==1.0.2.15
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip uninstall torch torchvision -y 
+          call "%conda_exe%" run -p "%root%\envs\env-base" pip install torch==2.3.1+cu118 torchvision==0.18.1+cu118 --index-url https://download.pytorch.org/whl/cu118 
+          
+          @REM env-pytorch
+          call "%conda_exe%" create -p "%root%\envs\env-pytorch" python=3.12 -y
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu124
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install ultralytics==8.0.230
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install timm
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pandas
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install numpy
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install opencv-python
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install pillow
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install dill
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install hachoir
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install versions
+          call "%conda_exe%" run -p "%root%\envs\env-pytorch" pip install jsonpickle
+          
+          @REM env-tensorflow
+          call "%conda_exe%" env create --file "%root%\EcoAssist\classification_utils\envs\tensorflow-linux-windows.yml" -p "%root%\envs\env-tensorflow"
+          
+          @REM install PyInstaller
+          call "%conda_exe%" create -p "${{ env.CONDA_DIR }}\envs\env-fresh" python=3.8 pyinstaller -y
+          
+          @REM normal executable
+          call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --noconsole --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+          move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION%.exe"
+          
+          @REM debug executable
+          call "%conda_exe%" run -p "${{ env.CONDA_DIR }}\envs\env-fresh" pyinstaller --onefile --console --icon="%root%\EcoAssist\imgs\logo_small_bg.ico" --distpath="%USERPROFILE%\dist" --workpath="%USERPROFILE%\build" "%root%\main.py"
+          move "%USERPROFILE%\dist\main.exe" "%root%/EcoAssist %RELEASE_VERSION% debug.exe"
+          
+          @REM conda clean
+          call "%conda_exe%" clean --all --yes --force-pkgs-dirs
+          call "%conda_exe%" clean --all --yes
+          call ${{ env.CONDA_DIR }}\condabin\mamba.bat clean --all --yes --force-pkgs-dirs
+          call ${{ env.CONDA_DIR }}\condabin\mamba.bat clean --all --yes
+          call ${{ env.CONDA_DIR }}\condabin\conda.bat clean --all --yes --force-pkgs-dirs
+          call ${{ env.CONDA_DIR }}\condabin\conda.bat clean --all --yes
 
       - name: Create archive
         shell: cmd
         run: |
           "C:\Program Files\7-Zip\7z.exe" a -t7z -mx9 "windows-${{ env.RELEASE_VERSION }}.7z" "%USERPROFILE%\EcoAssist\*"
 
-      # - name: Authenticate with Google Cloud
-      #   uses: google-github-actions/auth@v1
-      #   with:
-      #     credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
   
-      # - name: Set up Google Cloud
-      #   uses: google-github-actions/setup-gcloud@v1
-      #   with:
-      #     project_id: github-file-storage
+      - name: Set up Google Cloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: github-file-storage
 
-      # - name: Upload pinned 7z version to Google Cloud
-      #   shell: cmd
-      #   run: |
-      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
-      #     set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
-      #     set LATEST_FOLDER_NAME=latest
-      #     set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.7z
-      #     set LATEST_FILE_NAME=windows-latest.7z
-      #     gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
+      - name: Upload pinned 7z version to Google Cloud
+        shell: cmd
+        run: |
+          set BUCKET_NAME=${{ env.BUCKET_NAME }}
+          set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
+          set LATEST_FOLDER_NAME=latest
+          set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.7z
+          set LATEST_FILE_NAME=windows-latest.7z
+          gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%PINNED_FOLDER_NAME%/%PINNED_FILE_NAME%
 
-      # - name: Upload latest 7z version to Google Cloud
-      #   shell: cmd
-      #   run: |
-      #     set BUCKET_NAME=${{ env.BUCKET_NAME }}
-      #     set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
-      #     set LATEST_FOLDER_NAME=latest
-      #     set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.7z
-      #     set LATEST_FILE_NAME=windows-latest.7z
-      #     gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
+      - name: Upload latest 7z version to Google Cloud
+        shell: cmd
+        run: |
+          set BUCKET_NAME=${{ env.BUCKET_NAME }}
+          set PINNED_FOLDER_NAME=${{ env.RELEASE_VERSION }}
+          set LATEST_FOLDER_NAME=latest
+          set PINNED_FILE_NAME=windows-${{ env.RELEASE_VERSION }}.7z
+          set LATEST_FILE_NAME=windows-latest.7z
+          gsutil cp -r "%PINNED_FILE_NAME%" gs://%BUCKET_NAME%/%LATEST_FOLDER_NAME%/%LATEST_FILE_NAME%
 
-      # - name: Get the release body
-      #   shell: pwsh
-      #   run: Invoke-RestMethod -Uri https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.release.tag_name }} | ForEach-Object { $_.body } | Out-File -FilePath release_body.txt -Encoding utf8
+      - name: Get the release body
+        shell: pwsh
+        run: Invoke-RestMethod -Uri https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.event.release.tag_name }} | ForEach-Object { $_.body } | Out-File -FilePath release_body.txt -Encoding utf8
 
-      # - name: Append link to release body
-      #   shell: pwsh
-      #   run: |
-      #     Add-Content -Path "release_body.txt" -Value '- Install for **Windows**: [windows-${{ env.RELEASE_VERSION }}.7z](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/windows-${{ env.RELEASE_VERSION }}.7z)'
+      - name: Append link to release body
+        shell: pwsh
+        run: |
+          Add-Content -Path "release_body.txt" -Value '- Install for **Windows**: [windows-${{ env.RELEASE_VERSION }}.7z](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/windows-${{ env.RELEASE_VERSION }}.7z)'
 
-      # - name: Update the release body
-      #   shell: cmd
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     @echo off
-      #     set RELEASE_NAME=${{ github.ref_name }}
-      #     gh release edit %RELEASE_NAME% --notes-file release_body.txt
+      - name: Update the release body
+        shell: cmd
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          @echo off
+          set RELEASE_NAME=${{ github.ref_name }}
+          gh release edit %RELEASE_NAME% --notes-file release_body.txt
 
       - name: Install Nsis7z Plugin
         run: |
@@ -216,15 +216,6 @@ jobs:
           tar -xf "${{ github.workspace }}/Inetc_plugin.zip"
           7z x -o"${{ github.workspace }}/NSIS_Plugins" "${{ github.workspace }}/Inetc_plugin.zip"
 
-      # - name: Append VERSION to NSIS script
-      #   shell: pwsh
-      #   run: |
-      #     $root = "$env:USERPROFILE\EcoAssist"
-      #     $version = "${{ env.RELEASE_VERSION }}"
-      #     Set-Content -Path "newFile.nsi" -Value "!define VERSION `$version`"
-      #     Get-Content -Path "$root\install_files\windows\nsis-install-compiler.nsi" | Add-Content -Path "newFile.nsi"
-      #     Move-Item -Force -Path "newFile.nsi" -Destination "$root\install_files\windows\nsis-install-compiler.nsi"
-  
       - name: Append VERSION to NSIS script
         shell: cmd
         run: |
