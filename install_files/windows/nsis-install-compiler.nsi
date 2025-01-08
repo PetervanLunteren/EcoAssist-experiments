@@ -84,8 +84,8 @@ Section "Install"
     DetailPrint "Downloading files..."
     StrCpy $archiveUrl "https://storage.googleapis.com/github-release-files-storage/${VERSION}/windows-${VERSION}.7z"
     StrCpy $archiveName "$INSTDIR\windows-${VERSION}.7z"
-    # NSISdl::download $archiveUrl $archiveName
-    inetc::get $archiveUrl $archiveName
+    NSISdl::download $archiveUrl $archiveName
+    # inetc::get $archiveUrl $archiveName
     Pop $0
 
     # Check if download was successful
