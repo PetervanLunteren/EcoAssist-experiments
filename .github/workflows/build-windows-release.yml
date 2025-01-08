@@ -240,8 +240,8 @@ jobs:
           dir "%root%\EcoAssist\install_files\windows"
 
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
-          type "%GITHUB_WORKSPACE%\EcoAssist\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
-          move /Y newFile.nsi "%GITHUB_WORKSPACE%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
+          type "%GITHUB_WORKSPACE%\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
+          move /Y newFile.nsi "%GITHUB_WORKSPACE%\install_files\windows\nsis-install-compiler.nsi"
 
       - name: Create NSIS installer
         uses: joncloud/makensis-action@publish
