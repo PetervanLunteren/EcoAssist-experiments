@@ -8,6 +8,7 @@ Outfile "EcoAssist-${VERSION}-windows.exe"
 # Define variables
 Var archiveUrl
 Var archiveName
+Var InstallStatus
 
 # Include NSIS MUI for a modern interface
 !include MUI2.nsh
@@ -30,11 +31,13 @@ Name "EcoAssist ${VERSION}"
 !define MUI_UNICON "logo.ico"
 !define MUI_WELCOMEPAGE_TITLE "EcoAssist ${VERSION} installer"
 !define MUI_WELCOMEPAGE_TEXT "This install consists of three steps:$\r$\n$\r$\n   1 - Uninstall current EcoAssist version if present$\r$\n   2 - Download EcoAssist version ${VERSION}$\r$\n   3 - Extract and clean up files"
+
 !insertmacro MUI_PAGE_WELCOME
 !insertmacro MUI_PAGE_INSTFILES
 !insertmacro MUI_PAGE_FINISH
 !insertmacro MUI_UNPAGE_WELCOME
 !insertmacro MUI_UNPAGE_INSTFILES
+!insertmacro MUI_UNPAGE_FINISH
 !insertmacro MUI_LANGUAGE "English"
 
 # Section for installation steps
@@ -44,7 +47,7 @@ Section "Install"
     StrCpy $INSTDIR "$PROFILE\EcoAssist"
 
     # Hide progress bar
-    Push "false"
+    Push "true"
     Call ShowProgressBar
 
     # Step 1: Remove old files and directory if they exist
@@ -52,23 +55,40 @@ Section "Install"
     SetOutPath $INSTDIR
 
     SetDetailsPrint textonly
-    DetailPrint "Deleting files... 0%"
-    RMDir /r $INSTDIR/cameratraps
-    DetailPrint "Deleting files... 10%"
-    RMDir /r $INSTDIR/EcoAssist
-    DetailPrint "Deleting files... 20%"
-    RMDir /r $INSTDIR/envs
-    DetailPrint "Deleting files... 30%"
-    RMDir /r $INSTDIR/Human-in-the-loop
-    DetailPrint "Deleting files... 40%"
-    RMDir /r $INSTDIR/models
-    DetailPrint "Deleting files... 50%"
-    RMDir /r $INSTDIR/visualise_detection
-    DetailPrint "Deleting files... 60%"
-    RMDir /r $INSTDIR/yolov5_versions
-    DetailPrint "Deleting files... 70%"
+    RMDir /r $INSTDIR\visualise_detection
+    RMDir /r $INSTDIR\EcoAssist
+    RMDir /r $INSTDIR\cameratraps
+    RMDir /r $INSTDIR\envs\env-base\Lib\site-packages\torch
+    RMDir /r $INSTDIR\envs\env-base\Lib\site-packages\PyQt5
+    RMDir /r $INSTDIR\envs\env-base\Lib\site-packages\plotly
+    RMDir /r $INSTDIR\envs\env-base\Lib
+    RMDir /r $INSTDIR\envs\env-base\Library
+    RMDir /r $INSTDIR\envs\env-base
+    RMDir /r $INSTDIR\envs\env-pytorch\Lib
+    RMDir /r $INSTDIR\envs\env-pytorch\Library
+    RMDir /r $INSTDIR\envs\env-pytorch
+    RMDir /r $INSTDIR\envs\env-tensorflow\Lib
+    RMDir /r $INSTDIR\envs\env-tensorflow\Library
+    RMDir /r $INSTDIR\envs\env-tensorflow
+    RMDir /r $INSTDIR\Human-in-the-loop
+    RMDir /r $INSTDIR\models
+    RMDir /r $INSTDIR\yolov5_versions
+
+    ; Proceed to Success if no errors
+    IfErrors 0 RemoveSuccess 
+
+    ; Handle failure
+    MessageBox MB_ICONEXCLAMATION "Failed to remove the installation directory. Often a reboot solves this issue. Please try again after a reboot. "
+    StrCpy $InstallStatus 0 ; Installation failure
+    Abort
+    Goto RemoveDone
+
+    RemoveSuccess:
+    StrCpy $InstallStatus 1 ; Installation success
+
+    RemoveDone:
     RMDir /r $INSTDIR
-    DetailPrint "Deleting files... 100%"
+
     SetDetailsPrint both
 
     # remove dir all together
@@ -76,6 +96,10 @@ Section "Install"
 
     # add dir 
     CreateDirectory "$INSTDIR"
+
+    # Hide progress bar
+    Push "false"
+    Call ShowProgressBar
 
     # adjust header
     !insertmacro MUI_HEADER_TEXT "Step 2 of 3" "Downloading EcoAssist version ${VERSION}..."
@@ -95,6 +119,7 @@ Section "Install"
         Goto downloadDone
     downloadFail:
         DetailPrint "Failed to download archive. Exiting."
+        MessageBox MB_ICONEXCLAMATION "An error occurred during installation! Could not download archive."
         Abort
     downloadDone:
 
@@ -120,28 +145,64 @@ Section "Install"
     ; Create a shortcut on the desktop
     CreateShortcut "$DESKTOP\EcoAssist.lnk" "$INSTDIR\EcoAssist ${VERSION}.exe" "" "$INSTDIR\EcoAssist\logo.ico" 0 SW_SHOWNORMAL
 
+    # open EcoAssist in installer mode to load all dependencies and compile script so that the users doesnt have to wait long the next time
+    nsExec::Exec '"$INSTDIR\\envs\\env-base\\python.exe" "$INSTDIR\\EcoAssist\\EcoAssist_GUI.py" "installer"'
+
     ; Notify user
     DetailPrint "Shortcut created on the desktop."
 
 SectionEnd
 
-# Uninstaller section (optional)
+# Uninstaller section
 Section "Uninstall"
 
     # Set fixed installation directory without prompting the user
     StrCpy $INSTDIR "$PROFILE\EcoAssist" 
 
     # Remove installed files and directories during uninstallation
-    DetailPrint "Uninstalling..."
+    DetailPrint "Removing installed files..."
+    SetDetailsPrint textonly
+    RMDir /r $INSTDIR\visualise_detection
+    RMDir /r $INSTDIR\EcoAssist
+    RMDir /r $INSTDIR\cameratraps
+    RMDir /r $INSTDIR\envs\env-base\Lib\site-packages\torch
+    RMDir /r $INSTDIR\envs\env-base\Lib\site-packages\PyQt5
+    RMDir /r $INSTDIR\envs\env-base\Lib
+    RMDir /r $INSTDIR\envs\env-base\Library
+    RMDir /r $INSTDIR\envs\env-base
+    RMDir /r $INSTDIR\envs\env-pytorch\Lib
+    RMDir /r $INSTDIR\envs\env-pytorch\Library
+    RMDir /r $INSTDIR\envs\env-pytorch
+    RMDir /r $INSTDIR\envs\env-tensorflow\Lib
+    RMDir /r $INSTDIR\envs\env-tensorflow\Library
+    RMDir /r $INSTDIR\envs\env-tensorflow
+    RMDir /r $INSTDIR\Human-in-the-loop
+    RMDir /r $INSTDIR\models
+    RMDir /r $INSTDIR\yolov5_versions
+    Delete "$INSTDIR\Uninstaller.exe"
     RMDir /r $INSTDIR
-    DetailPrint "Uninstallation complete."
+    IfErrors 0 RemoveSuccess ; Proceed to Success if no errors
 
+    ; Handle failure
+    MessageBox MB_ICONEXCLAMATION "Failed to remove the installation directory. Often a reboot solves this issue. Please try again after a reboot. "
+    StrCpy $InstallStatus 0 ; Installation failure
+    Abort
+    Goto RemoveDone
+
+    RemoveSuccess:
+    StrCpy $InstallStatus 1 ; Installation success
+
+    RemoveDone:
+
+    Delete "$DESKTOP\EcoAssist.lnk"
+    DetailPrint "Uninstallation complete."
 SectionEnd
 
+# function to hide / show pbar
 Function ShowProgressBar
     Exch $0
     FindWindow $1 "#32770" "" $HWNDPARENT
-    GetDlgItem $2 $1 1004 ; The control ID for the progress bar is typically 1004
+    GetDlgItem $2 $1 1004
     IntCmp $2 0 skip
 
     StrCmp $0 "true" show hide
@@ -157,3 +218,10 @@ Function ShowProgressBar
     skip:
         MessageBox MB_OK "Progress bar control not found."
 FunctionEnd
+
+# this happens whenever the user presses cancel
+Function .onInstFailed
+    MessageBox MB_ICONEXCLAMATION "The installation was canceled. Some files may not have been fully installed."
+    abort
+FunctionEnd
+
