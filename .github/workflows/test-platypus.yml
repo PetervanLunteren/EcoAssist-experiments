@@ -77,7 +77,7 @@ jobs:
 
     - name: Create Installer
       run: |
-        sudo '/usr/local/share/platypus/platypus_clt' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${{ env.RELEASE_VERSION }} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${{ env.RELEASE_VERSION }}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
+        sudo '/usr/local/share/platypus/platypus_clt' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist-${{ env.RELEASE_VERSION }}-installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${{ env.RELEASE_VERSION }}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
 
     - name: List files in macOS install directory
       run: |
