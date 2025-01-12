@@ -21,6 +21,7 @@ jobs:
     - name: Install Platypus
       run: |
         brew install platypus
+        brew install --cask platypus
         brew --prefix platypus
 
     - name: Install Miniconda
