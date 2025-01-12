@@ -31,22 +31,22 @@ jobs:
         sudo chmod +x '/usr/local/share/platypus/platypus_clt'
 
 
-    - name: Install Miniconda
-      run: |
+    # - name: Install Miniconda
+    #   run: |
 
-        ### install miniconda
-        mkdir "$HOME/miniforge"
-        curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
-        bash miniforge.sh -b -u -p "$HOME/miniforge"
-        echo "succesfully installed at $HOME/miniforge"
+    #     ### install miniconda
+    #     mkdir "$HOME/miniforge"
+    #     curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
+    #     bash miniforge.sh -b -u -p "$HOME/miniforge"
+    #     echo "succesfully installed at $HOME/miniforge"
 
-        ### source conda 
-        source "$HOME/miniforge/etc/profile.d/conda.sh"
-        source "$HOME/miniforge/bin/activate"
-        conda_exe="$HOME/miniforge/bin/conda"
+    #     ### source conda 
+    #     source "$HOME/miniforge/etc/profile.d/conda.sh"
+    #     source "$HOME/miniforge/bin/activate"
+    #     conda_exe="$HOME/miniforge/bin/conda"
 
-        ### create a conda env for platypus
-        $conda_exe create -p "$HOME/miniforge/envs/env-platypus" python=3.8 pyinstaller -y
+    #     ### create a conda env for platypus
+    #     $conda_exe create -p "$HOME/miniforge/envs/env-platypus" python=3.8 pyinstaller -y
 
     - name: Append VERSION to Platypus Installer Script
       shell: bash
