@@ -2,9 +2,9 @@ name: Build Platypus Installer
 
 on:
   workflow_dispatch:
-  # release:
-  #   types:
-  #     - published
+  release:
+    types:
+      - published
 
 jobs:
   build-osx-arm-release:
@@ -52,16 +52,18 @@ jobs:
       shell: bash
       run: |
         # Define the file path
-        FILE_PATH="${{ github.workspace }}/install_files/macos/platypus-install-compiler.py"
+        FILE_PATH="${{ github.workspace }}/install_files/macos/platypus-install-compiler.sh"
     
         # Create a new file with the VERSION line
-        echo "VERSION = \"${RELEASE_VERSION}\"" > newFile.py
+        echo "VERSION = \"${{ env.RELEASE_VERSION }}\"" > newFile.sh
     
         # Append the original file's content
-        cat "$FILE_PATH" >> newFile.py
+        cat "$FILE_PATH" >> newFile.sh
     
         # Replace the original file with the new file
-        mv newFile.py "$FILE_PATH"
+        mv newFile.sh "$FILE_PATH"
+
+        cat "$FILE_PATH"
 
     - name: Create Installer
       run: |
