@@ -36,7 +36,7 @@ jobs:
         conda_exe="$HOME/miniforge/bin/conda"
 
         ### create a conda env for platypus
-        conda_exe create -p "$HOME/miniforge/envs/env-platypus" python=3.8 pyinstaller -y
+        $conda_exe create -p "$HOME/miniforge/envs/env-platypus" python=3.8 pyinstaller -y
 
     - name: Append VERSION to Platypus Installer Script
       shell: bash
