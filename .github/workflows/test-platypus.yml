@@ -102,8 +102,8 @@ jobs:
       uses: actions/upload-release-asset@v1
       with:
         upload_url: ${{ env.UPLOAD_URL }}  # Use the updated environment variable
-        asset_path: "${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-macos.app"
-        asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-macos.app"
+        asset_path: "${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-installer.app"
+        asset_name: "Installer for macOS ${{ env.RELEASE_VERSION }} (.app)"
         asset_content_type: application/octet-stream
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
