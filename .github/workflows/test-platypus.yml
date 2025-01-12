@@ -1,0 +1,82 @@
+name: Build Platypus Installer
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+jobs:
+  build-osx-arm-release:
+    runs-on: macos-15
+
+    env:
+      RELEASE_VERSION: ${{ github.event.release.tag_name }}
+      BUCKET_NAME: github-release-files-storage
+      
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: Install Platypus
+      run: brew install platypus
+
+    - name: Install Miniconda
+      run: |
+
+        ### install miniconda
+        mkdir "$HOME/miniforge"
+        curl -L "https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-MacOSX-arm64.sh" -o miniforge.sh
+        bash miniforge.sh -b -u -p "$HOME/miniforge"
+        echo "succesfully installed at $HOME/miniforge"
+
+        ### source conda 
+        source "$HOME/miniforge/etc/profile.d/conda.sh"
+        source "$HOME/miniforge/bin/activate"
+        conda_exe="$HOME/miniforge/bin/conda"
+
+        ### create a conda env for platypus
+        conda_exe create -p "$HOME/miniforge/envs/env-platypus" python=3.8 pyinstaller -y
+
+    - name: Append VERSION to Platypus Installer Script
+      shell: bash
+      run: |
+        # Define the file path
+        FILE_PATH="${GITHUB_WORKSPACE}/install_files/macos/platypus-install-compiler.py"
+    
+        # Create a new file with the VERSION line
+        echo "VERSION = \"${RELEASE_VERSION}\"" > newFile.py
+    
+        # Append the original file's content
+        cat "$FILE_PATH" >> newFile.py
+    
+        # Replace the original file with the new file
+        mv newFile.py "$FILE_PATH"
+
+    - name: Create Installer
+      run: |
+        /usr/local/bin/platypus --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
+
+    - name: Get Upload URL for Release
+      id: get_release
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const release = await github.rest.repos.getReleaseByTag({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag: '${{ env.RELEASE_VERSION }}',
+          });
+          // Write the upload URL to the environment file
+          const fs = require('fs');
+          fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
+    
+    - name: Upload Asset to GitHub Release
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ env.UPLOAD_URL }}  # Use the updated environment variable
+        asset_path: "install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-macos.app"
+        asset_name: "EcoAssist-${{ env.RELEASE_VERSION }}-macos.app"
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
