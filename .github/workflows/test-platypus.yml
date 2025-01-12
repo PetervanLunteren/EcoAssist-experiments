@@ -81,6 +81,11 @@ jobs:
         # export PLATYPUS_PATH="${{ github.workspace }}/install_files/macos"
         sudo '/usr/local/share/platypus/platypus_clt' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
 
+    - name: List files in macOS install directory
+      run: |
+        echo "Files in the directory:"
+        ls -la /Users/runner/work/EcoAssist-experiments/EcoAssist-experiments/install_files/macos/
+
     - name: Get Upload URL for Release
       id: get_release
       uses: actions/github-script@v6
