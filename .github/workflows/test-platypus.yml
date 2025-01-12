@@ -22,6 +22,11 @@ jobs:
       run: |
         curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/platypus" -o "${{ github.workspace }}/install_files/macos/platypus"
         chmod +x "${{ github.workspace }}/install_files/macos/platypus"
+
+        mkdir '/usr/local/share/platypus/'
+        curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/ScriptExec" -o "/usr/local/share/platypus/ScriptExec"
+        chmod +x "/usr/local/share/platypus/ScriptExec"
+        
         # brew install platypus
         # brew install --cask platypus
         # brew --prefix platypus
