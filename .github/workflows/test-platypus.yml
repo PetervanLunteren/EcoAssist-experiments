@@ -2,9 +2,9 @@ name: Build Platypus Installer
 
 on:
   workflow_dispatch:
-  release:
-    types:
-      - published
+  # release:
+  #   types:
+  #     - published
 
 jobs:
   build-osx-arm-release:
@@ -20,12 +20,13 @@ jobs:
 
     - name: Install Platypus
       run: |
-
+        # copy files into the right directory
         sudo mkdir -p '/usr/local/share/platypus/'
         sudo cp "${{ github.workspace }}/install_files/macos/ScriptExec" '/usr/local/share/platypus/'
         sudo cp "${{ github.workspace }}/install_files/macos/platypus_clt" '/usr/local/share/platypus/'
         sudo cp -r "${{ github.workspace }}/install_files/macos/MainMenu.nib" '/usr/local/share/platypus/'
 
+        # make executable
         sudo chmod +x '/usr/local/share/platypus/ScriptExec'
         sudo chmod +x '/usr/local/share/platypus/platypus_clt'
 
