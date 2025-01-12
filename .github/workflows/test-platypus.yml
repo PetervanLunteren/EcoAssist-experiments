@@ -19,7 +19,9 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install Platypus
-      run: curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/platypus" -o "${{ github.workspace }}/install_files/macos/platypus"
+      run: |
+        curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/platypus" -o "${{ github.workspace }}/install_files/macos/platypus"
+        chmod +x "${{ github.workspace }}/install_files/macos/platypus"
         # brew install platypus
         # brew install --cask platypus
         # brew --prefix platypus
