@@ -201,7 +201,67 @@ jobs:
           new_body="$(cat release_body.txt)
           - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.tar.xz](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz)"
           echo "$new_body" > new_release_body.txt
-  
+
       - name: Update the release body
         run: |
           gh release edit ${{ github.ref_name }} --notes "$(cat new_release_body.txt)"
+
+      - name: Install Platypus
+        run: |
+          # copy files into the right directory
+          sudo mkdir -p '/usr/local/share/platypus/'
+          sudo cp "${{ github.workspace }}/install_files/macos/ScriptExec" '/usr/local/share/platypus/'
+          sudo cp "${{ github.workspace }}/install_files/macos/platypus_clt" '/usr/local/share/platypus/'
+          sudo cp -r "${{ github.workspace }}/install_files/macos/MainMenu.nib" '/usr/local/share/platypus/'
+  
+          # make executable
+          sudo chmod +x '/usr/local/share/platypus/ScriptExec'
+          sudo chmod +x '/usr/local/share/platypus/platypus_clt'
+
+      - name: Append VERSION to Platypus Installer Script
+        shell: bash
+        run: |
+          # Define the file path
+          FILE_PATH="${{ github.workspace }}/install_files/macos/platypus-install-compiler.sh"
+      
+          # Create a new file with the VERSION line
+          echo "VERSION = \"${{ env.RELEASE_VERSION }}\"" > newFile.sh
+      
+          # Append the original file's content
+          cat "$FILE_PATH" >> newFile.sh
+      
+          # Replace the original file with the new file
+          mv newFile.sh "$FILE_PATH"
+
+      - name: Create Installer
+        run: |
+          sudo '/usr/local/share/platypus/platypus_clt' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist-${{ env.RELEASE_VERSION }}-installer'  --interface-type 'Progress Bar'  --interpreter '/bin/bash'   --app-version '${{ env.RELEASE_VERSION }}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.sh'
+
+      - name: Compress the macOS installer
+        run: |
+          cd "${{ github.workspace }}/install_files/macos"
+          zip -r "EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip" "EcoAssist-${{ env.RELEASE_VERSION }}-installer.app"
+
+      - name: Get Upload URL for Release
+        id: get_upload_url
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const release = await github.rest.repos.getReleaseByTag({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              tag: '${{ env.RELEASE_VERSION }}',
+            });
+            // Write the upload URL to the environment file
+            const fs = require('fs');
+            fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
+  
+      - name: Upload Asset to GitHub Release
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ env.UPLOAD_URL }}
+          asset_path: "${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
+          asset_name: "MacOS-installer-${{ env.RELEASE_VERSION }}.zip"
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
