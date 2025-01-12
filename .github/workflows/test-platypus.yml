@@ -25,6 +25,10 @@ jobs:
 
         curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/ScriptExec" -o "${{ github.workspace }}/install_files/macos/ScriptExec"
         chmod +x "${{ github.workspace }}/install_files/macos/ScriptExec"
+
+        mkdir "${{ github.workspace }}/install_files/macos/usr/local/share/platypus/"
+        curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/ScriptExec" -o "${{ github.workspace }}/install_files/macos/usr/local/share/platypus/ScriptExec"
+        chmod +x "${{ github.workspace }}/install_files/macos/usr/local/share/platypus/ScriptExec"
         
         # brew install platypus
         # brew install --cask platypus
@@ -65,6 +69,7 @@ jobs:
     - name: Create Installer
       run: |
         export PATH="${{ github.workspace }}/install_files/macos:$PATH"
+        export PLATYPUS_PATH="${{ github.workspace }}/install_files/macos"
         '${{ github.workspace }}/install_files/macos/platypus' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
 
     - name: Get Upload URL for Release
