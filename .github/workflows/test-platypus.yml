@@ -19,10 +19,10 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Install Platypus
-      run: |
-        brew install platypus
-        brew install --cask platypus
-        brew --prefix platypus
+      run: curl -L "https://storage.googleapis.com/github-release-files-storage/Platypus_CLI_DO_NOT_DELETE/platypus" -o "${GITHUB_WORKSPACE}/install_files/macos/platypus"
+        # brew install platypus
+        # brew install --cask platypus
+        # brew --prefix platypus
 
     - name: Install Miniconda
       run: |
@@ -58,7 +58,7 @@ jobs:
 
     - name: Create Installer
       run: |
-        '/opt/homebrew/bin/platypus' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
+        '${GITHUB_WORKSPACE}/install_files/macos/platypus' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
 
     - name: Get Upload URL for Release
       id: get_release
