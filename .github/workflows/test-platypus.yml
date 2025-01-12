@@ -75,9 +75,9 @@ jobs:
 
     - name: Create Installer
       run: |
-        export PATH="${{ github.workspace }}/install_files/macos:$PATH"
-        export PLATYPUS_PATH="${{ github.workspace }}/install_files/macos"
-        "/Applications/Platypus.app/Contents/MacOS/Platypus" --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
+        # export PATH="${{ github.workspace }}/install_files/macos:$PATH"
+        # export PLATYPUS_PATH="${{ github.workspace }}/install_files/macos"
+        '/usr/local/share/platypus/platypus_clt' --app-icon '${{ github.workspace }}/install_files/macos/logo.icns'  --name 'EcoAssist ${RELEASE_VERSION} installer'  --interface-type 'Progress Bar'  --interpreter '$HOME/miniforge/envs/env-platypus/bin/python'   --app-version '${RELEASE_VERSION}'  '${{ github.workspace }}/install_files/macos/platypus-install-compiler.py'
 
     - name: Get Upload URL for Release
       id: get_release
