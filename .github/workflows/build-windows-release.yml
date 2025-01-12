@@ -219,17 +219,6 @@ jobs:
       - name: Append VERSION to NSIS script
         shell: cmd
         run: |
-          set root=%USERPROFILE%\EcoAssist
-          echo root=%root%
-          echo newFile.nsi="%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
-          echo new_file="%root%\EcoAssist\install_files\windows\nsis-install-compiler.nsi"
-          echo Listing contents of %root%\EcoAssist\:
-          dir "%root%\EcoAssist\"
-          echo Listing contents of %root%\EcoAssist\install_files\:
-          dir "%root%\EcoAssist\install_files\"
-          echo Listing contents of %root%\EcoAssist\install_files\windows:
-          dir "%root%\EcoAssist\install_files\windows"
-
           echo !define VERSION "${{ env.RELEASE_VERSION }}" > newFile.nsi
           type "%GITHUB_WORKSPACE%\install_files\windows\nsis-install-compiler.nsi" >> newFile.nsi
           move /Y newFile.nsi "%GITHUB_WORKSPACE%\install_files\windows\nsis-install-compiler.nsi"
@@ -253,12 +242,6 @@ jobs:
             // Write the upload URL to the environment file instead of using set-output
             const fs = require('fs');
             fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
-
-      - name: Append VERSION to NSIS script
-        shell: cmd
-        run: |
-          echo Listing contents of "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\":
-          dir "D:\a\EcoAssist-experiments\EcoAssist-experiments\install_files\windows\"
 
       - name: Upload Asset to GitHub Release
         uses: actions/upload-release-asset@v1
