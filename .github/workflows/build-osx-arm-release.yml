@@ -152,39 +152,39 @@ jobs:
           mv "${HOME}/dist/main" "${root}/EcoAssist ${RELEASE_VERSION} debug"      # debug executable
           mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"    # main app executable
 
-      # - name: Zip folder contents
-      #   run: |
-      #     cd "$HOME"
-      #     # zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist" # DEBUG
-      #     # tar -czvf "osx-arm-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist" # DEBUG
-      #     tar -caf "osx-arm-${{ env.RELEASE_VERSION }}.tar.xz" EcoAssist
+      - name: Zip folder contents
+        run: |
+          cd "$HOME"
+          # zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist" # DEBUG
+          # tar -czvf "osx-arm-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist" # DEBUG
+          tar -caf "osx-arm-${{ env.RELEASE_VERSION }}.tar.xz" EcoAssist
 
-      # - name: Authenticate with Google Cloud
-      #   uses: google-github-actions/auth@v1
-      #   with:
-      #     credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
   
-      # - name: Set up Google Cloud
-      #   uses: google-github-actions/setup-gcloud@v1
-      #   with:
-      #     project_id: github-file-storage
+      - name: Set up Google Cloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: github-file-storage
   
-      # - name: Upload files to Google Cloud
-      #   run: |
-      #     cd "$HOME"
+      - name: Upload files to Google Cloud
+        run: |
+          cd "$HOME"
           
-      #     # init vars
-      #     BUCKET_NAME="${{ env.BUCKET_NAME }}"
-      #     PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
-      #     LATEST_FOLDER_NAME="latest"
-      #     PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
-      #     LATEST_FILE_NAME="osx-arm-latest.tar.xz"
+          # init vars
+          BUCKET_NAME="${{ env.BUCKET_NAME }}"
+          PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
+          LATEST_FOLDER_NAME="latest"
+          PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
+          LATEST_FILE_NAME="osx-arm-latest.tar.xz"
 
-      #     # upload release pinned version
-      #     gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
+          # upload release pinned version
+          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
 
-      #     # upload latest release version
-      #     gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
+          # upload latest release version
+          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
   
       - name: Authenticate GitHub CLI
         run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
