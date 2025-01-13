@@ -155,7 +155,7 @@ jobs:
       - name: Zip folder contents
         run: |
           cd "$HOME"
-          tar -caf "osx-arm-${{ env.RELEASE_VERSION }}.tar.xz" EcoAssist
+          tar -caf "macos-${{ env.RELEASE_VERSION }}.tar.xz" EcoAssist
 
       # - name: Upload files to Google Cloud
       #   run: |
@@ -165,8 +165,8 @@ jobs:
       #     BUCKET_NAME="${{ env.BUCKET_NAME }}"
       #     PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
       #     LATEST_FOLDER_NAME="latest"
-      #     PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
-      #     LATEST_FILE_NAME="osx-arm-latest.tar.xz"
+      #     PINNED_FILE_NAME="macos-${{ env.RELEASE_VERSION }}.tar.xz"
+      #     LATEST_FILE_NAME="macos-latest.tar.xz"
 
       #     # upload release pinned version
       #     gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
@@ -181,7 +181,7 @@ jobs:
       #   id: append_link
       #   run: |
       #     new_body="$(cat release_body.txt)
-      #     - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.tar.xz](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz)"
+      #     - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [macos-${{ env.RELEASE_VERSION }}.tar.xz](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/macos-${{ env.RELEASE_VERSION }}.tar.xz)"
       #     echo "$new_body" > new_release_body.txt
 
       # - name: Update the release body
@@ -268,7 +268,7 @@ jobs:
           BUCKET_NAME="${{ env.BUCKET_NAME }}"
           PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
           LATEST_FOLDER_NAME="latest"
-          COMPRESSED_FILES="${{ env.HOME }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
+          COMPRESSED_FILES="${{ env.HOME }}/macos-${{ env.RELEASE_VERSION }}.tar.xz"
           LATEST_INSTALLER="${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
 
           # upload the application files (± 6 GB)
