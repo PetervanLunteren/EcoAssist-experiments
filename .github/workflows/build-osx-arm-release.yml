@@ -148,7 +148,7 @@ jobs:
           $conda_exe clean --all --yes
 
           ### move and rename executables
-          cp "${HOME}/dist/main" "${root}/EcoAssist ${RELEASE_VERSION} installer"  # installer executable
+          # cp "${HOME}/dist/main" "${root}/EcoAssist ${RELEASE_VERSION} installer"  # installer executable
           mv "${HOME}/dist/main" "${root}/EcoAssist ${RELEASE_VERSION} debug"      # debug executable
           mv "${HOME}/dist/main.app" "${root}/EcoAssist ${RELEASE_VERSION}.app"    # main app executable
 
