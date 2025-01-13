@@ -58,7 +58,7 @@ jobs:
           git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "${root}/EcoAssist"
           rm -rf "${root}/EcoAssist/.git"
           mv "${root}/EcoAssist/main.py" "${root}/main.py"
-          echo ${{ env.RELEASE_VERSION }} > "${root}/EcoAssist/version.txt"
+          echo "${{ env.RELEASE_VERSION }}" > "${root}/EcoAssist/version.txt"
           echo "EcoAssist cloned"
           
           git clone https://github.com/agentmorris/MegaDetector.git "${root}/MegaDetector"
