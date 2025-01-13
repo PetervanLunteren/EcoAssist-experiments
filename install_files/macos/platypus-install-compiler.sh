@@ -30,7 +30,7 @@ fi
 progress 3
 
 # Step 0: Remove previous installation
-echo " ${PBAR_POS}% - Step 1 of 5 - Uninstalling ${PREVIOUS_VERSION}..."
+echo "Step 1 of 5 - Uninstalling ${PREVIOUS_VERSION}..."
 if [[ -d "$INSTALL_DIR" ]]; then
     if ! rm -rf "$INSTALL_DIR"; then
         echo "ALERT:Error|Failed to remove ${PREVIOUS_VERSION} ${INSTALL_DIR}"
@@ -53,7 +53,7 @@ if [[ -f "$TAR_FILE" ]]; then
 fi
 
 progress 1
-echo "${PBAR_POS}% - Step 2 of 5 - Downloading ${VERSION}..."
+echo "Step 2 of 5 - Downloading ${VERSION}..."
 
 if ! curl -s -o "$TAR_FILE" -L "$URL"; then
     echo "ALERT:Error|Failed to download ${APP_NAME} from ${URL}"
@@ -68,7 +68,7 @@ if [[ ! -d "$INSTALL_DIR" ]]; then
 fi
 
 progress 2
-echo "${PBAR_POS}% - Step 3 of 5 - Extracting files..."
+echo "Step 3 of 5 - Extracting files..."
 if ! tar -xf "$TAR_FILE" -C "$APPLICATIONS_DIR"; then
     echo "ALERT:Error|Failed to extract ${APP_NAME} to ${APPLICATIONS_DIR}"
     exit 1
@@ -78,7 +78,7 @@ rm "$TAR_FILE"
 progress 19
 
 # Step 3: Remove attributes recursively
-echo "${PBAR_POS}% - Step 4 of 5 - Removing attributes..."
+echo "Step 4 of 5 - Removing attributes..."
 if ! xattr -dr com.apple.quarantine "$INSTALL_DIR"; then
     echo "Error: Failed to remove attributes"
     exit 1
@@ -87,7 +87,7 @@ fi
 progress 21
 
 # Dummy open the app to trigger the first run experience
-echo "${PBAR_POS}% - Step 5 of 5 - Compiling scripts..."
+echo "Step 5 of 5 - Compiling scripts..."
 if ! "${INSTALL_DIR}/envs/env-base/bin/python" "${INSTALL_DIR}/EcoAssist/EcoAssist_GUI.py" installer; then
     echo "Error: Failed to trigger the first run experience"
     exit 1
@@ -110,6 +110,7 @@ if ln -s "${INSTALL_DIR}/${APP_NAME} ${VERSION}.app" "$SHORTCUT"; then
     echo ""
     echo "'${SHORTCUT}'"
     echo ""
+    echo "Completed! You can quit this installer now."
 else
     echo "ALERT:Error|Failed to create shortcut ${SHORTCUT}"
     exit 1
