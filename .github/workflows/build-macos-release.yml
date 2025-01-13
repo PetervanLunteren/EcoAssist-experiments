@@ -261,18 +261,14 @@ jobs:
         with:
           project_id: github-file-storage
 
-      - name: Upload files to Google Cloud
+      - name:  Upload program files to Google Cloud
         run: |
+          cd "$HOME"
+          FILE_TO_UPLOAD="macos-${{ env.RELEASE_VERSION }}.tar.xz"
+          gsutil cp -r $FILE_TO_UPLOAD gs://${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/$FILE_TO_UPLOAD
 
-          # init vars
-          BUCKET_NAME="${{ env.BUCKET_NAME }}"
-          PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
-          LATEST_FOLDER_NAME="latest"
-          COMPRESSED_FILES="$HOME/macos-${{ env.RELEASE_VERSION }}.tar.xz"
-          LATEST_INSTALLER="${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
-
-          # upload the application files (± 6 GB)
-          gsutil cp -r $COMPRESSED_FILES gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$COMPRESSED_FILES
-
-          # upload the installer as latest (± 250 KB)
-          gsutil cp -r $LATEST_INSTALLER gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/macos-installer-latest.zip
+      - name:  Upload installer to Google Cloud
+        run: |
+          cd "${{ github.workspace }}/install_files/macos/"
+          FILE_TO_UPLOAD="EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
+          gsutil cp -r $FILE_TO_UPLOAD gs://${{ env.BUCKET_NAME }}/latest/EcoAssist-latest-installer.zip
