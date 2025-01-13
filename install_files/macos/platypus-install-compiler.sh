@@ -109,6 +109,7 @@ if ln -s "${INSTALL_DIR}/${APP_NAME} ${VERSION}.app" "$SHORTCUT"; then
     echo "You can now open EcoAssist via the Desktop shortcut:"
     echo ""
     echo "'${SHORTCUT}'"
+    echo ""
 else
     echo "ALERT:Error|Failed to create shortcut ${SHORTCUT}"
     exit 1
