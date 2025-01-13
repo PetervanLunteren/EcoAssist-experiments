@@ -17,12 +17,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        ref: ${{ github.ref_name }}
+        fetch-depth: 0
 
     - name: Replace contents of version.txt
       run: |
         echo "${{ env.RELEASE_VERSION }}" > version.txt
-        cat version.txt
         
     - name: Commit changes
       run: |
@@ -32,6 +31,7 @@ jobs:
         git commit -m "Version tag update (GitHub actions)"
 
     - name: Push changes
-      run: git push
+      run: |
+        git push origin HEAD:refs/heads/main
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
