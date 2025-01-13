@@ -275,4 +275,4 @@ jobs:
           gsutil cp -r $COMPRESSED_FILES gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$COMPRESSED_FILES
 
           # upload the installer as latest (± 250 KB)
-          gsutil cp -r $LATEST_INSTALLER gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/MacOS-installer-latest.zip
+          gsutil cp -r $LATEST_INSTALLER gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/macos-installer-latest.zip
