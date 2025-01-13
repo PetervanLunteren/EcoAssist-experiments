@@ -143,7 +143,7 @@ Section "Install"
     WriteUninstaller "$INSTDIR\Uninstaller.exe"
 
     ; Create a shortcut on the desktop
-    CreateShortcut "$DESKTOP\EcoAssist.lnk" "$INSTDIR\EcoAssist ${VERSION}.exe" "" "$INSTDIR\EcoAssist\logo.ico" 0 SW_SHOWNORMAL
+    CreateShortcut "$DESKTOP\EcoAssist.lnk" "$INSTDIR\EcoAssist ${VERSION}.exe" "" "$INSTDIR\EcoAssist\install_files\windows\logo.ico" 0 SW_SHOWNORMAL
 
     # open EcoAssist in installer mode to load all dependencies and compile script so that the users doesnt have to wait long the next time
     nsExec::Exec '"$INSTDIR\\envs\\env-base\\python.exe" "$INSTDIR\\EcoAssist\\EcoAssist_GUI.py" "installer"'
