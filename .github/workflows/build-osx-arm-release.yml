@@ -1,4 +1,4 @@
-name: Build macOS ARM release
+name: Build macOS release
 
 on:
   workflow_dispatch:
@@ -7,7 +7,7 @@ on:
       - published
 
 jobs:
-  build-osx-arm-release:
+  build-macos-release:
     runs-on: macos-15
 
     env:
