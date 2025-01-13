@@ -1,4 +1,4 @@
-name: Update version TXT
+name: Update version text file
 
 on:
   workflow_dispatch:
