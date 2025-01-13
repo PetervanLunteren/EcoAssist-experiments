@@ -155,56 +155,38 @@ jobs:
       - name: Zip folder contents
         run: |
           cd "$HOME"
-          # zip -r "osx-arm-${{ env.RELEASE_VERSION }}.zip" "EcoAssist" # DEBUG
-          # tar -czvf "osx-arm-${{ env.RELEASE_VERSION }}.tar.gz" "EcoAssist" # DEBUG
           tar -caf "osx-arm-${{ env.RELEASE_VERSION }}.tar.xz" EcoAssist
 
-      - name: Authenticate with Google Cloud
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
-  
-      - name: Set up Google Cloud
-        uses: google-github-actions/setup-gcloud@v1
-        with:
-          project_id: github-file-storage
-  
-      - name: Upload files to Google Cloud
-        run: |
-          cd "$HOME"
+      # - name: Upload files to Google Cloud
+      #   run: |
+      #     cd "$HOME"
           
-          # init vars
-          BUCKET_NAME="${{ env.BUCKET_NAME }}"
-          PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
-          LATEST_FOLDER_NAME="latest"
-          PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
-          LATEST_FILE_NAME="osx-arm-latest.tar.xz"
+      #     # init vars
+      #     BUCKET_NAME="${{ env.BUCKET_NAME }}"
+      #     PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
+      #     LATEST_FOLDER_NAME="latest"
+      #     PINNED_FILE_NAME="osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
+      #     LATEST_FILE_NAME="osx-arm-latest.tar.xz"
 
-          # upload release pinned version
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
+      #     # upload release pinned version
+      #     gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
+  
+      # - name: Get the release body
+      #   id: get_release
+      #   run: |
+      #     release=$(gh release view ${{ github.ref_name }} --json body -q .body)
+      #     echo "$release" > release_body.txt
+  
+      # - name: Append link to release body
+      #   id: append_link
+      #   run: |
+      #     new_body="$(cat release_body.txt)
+      #     - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.tar.xz](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz)"
+      #     echo "$new_body" > new_release_body.txt
 
-          # upload latest release version
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
-  
-      - name: Authenticate GitHub CLI
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
-  
-      - name: Get the release body
-        id: get_release
-        run: |
-          release=$(gh release view ${{ github.ref_name }} --json body -q .body)
-          echo "$release" > release_body.txt
-  
-      - name: Append link to release body
-        id: append_link
-        run: |
-          new_body="$(cat release_body.txt)
-          - Install for **macOS** (Apple Silicon - M1, M2, M3, etc.): [osx-arm-${{ env.RELEASE_VERSION }}.tar.xz](https://storage.googleapis.com/${{ env.BUCKET_NAME }}/${{ env.RELEASE_VERSION }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz)"
-          echo "$new_body" > new_release_body.txt
-
-      - name: Update the release body
-        run: |
-          gh release edit ${{ github.ref_name }} --notes "$(cat new_release_body.txt)"
+      # - name: Update the release body
+      #   run: |
+      #     gh release edit ${{ github.ref_name }} --notes "$(cat new_release_body.txt)"
 
       - name: Install Platypus
         run: |
@@ -255,6 +237,9 @@ jobs:
             // Write the upload URL to the environment file
             const fs = require('fs');
             fs.appendFileSync(process.env.GITHUB_ENV, `UPLOAD_URL=${release.data.upload_url}\n`);
+
+      - name: Authenticate GitHub CLI
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
   
       - name: Upload Asset to GitHub Release
         uses: actions/upload-release-asset@v1
@@ -265,3 +250,29 @@ jobs:
           asset_content_type: application/octet-stream
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Authenticate with Google Cloud
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GOOGLE_STORAGE_UPLOAD_KEY }}
+  
+      - name: Set up Google Cloud
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: github-file-storage
+
+      - name: Upload files to Google Cloud
+        run: |
+
+          # init vars
+          BUCKET_NAME="${{ env.BUCKET_NAME }}"
+          PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
+          LATEST_FOLDER_NAME="latest"
+          COMPRESSED_FILES="${{ env.HOME }}/osx-arm-${{ env.RELEASE_VERSION }}.tar.xz"
+          LATEST_INSTALLER="${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
+
+          # upload the application files (± 6 GB)
+          gsutil cp -r $COMPRESSED_FILES gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$COMPRESSED_FILES
+
+          # upload the installer as latest (± 250 KB)
+          gsutil cp -r $LATEST_INSTALLER gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/MacOS-installer-latest.zip
