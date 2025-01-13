@@ -268,7 +268,7 @@ jobs:
           BUCKET_NAME="${{ env.BUCKET_NAME }}"
           PINNED_FOLDER_NAME="${{ env.RELEASE_VERSION }}"
           LATEST_FOLDER_NAME="latest"
-          COMPRESSED_FILES="${{ env.HOME }}/macos-${{ env.RELEASE_VERSION }}.tar.xz"
+          COMPRESSED_FILES="$HOME/macos-${{ env.RELEASE_VERSION }}.tar.xz"
           LATEST_INSTALLER="${{ github.workspace }}/install_files/macos/EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
 
           # upload the application files (± 6 GB)
