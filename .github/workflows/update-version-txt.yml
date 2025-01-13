@@ -21,7 +21,8 @@ jobs:
 
     - name: Replace contents of version.txt
       run: |
-        CLEAN_VERSION=${{ env.RELEASE_VERSION#v }}
+        RAW_VERSION=${{ env.RELEASE_VERSION }}
+        CLEAN_VERSION="${RAW_VERSION#v}"
         echo "$CLEAN_VERSION" > version.txt
         
     - name: Commit changes
