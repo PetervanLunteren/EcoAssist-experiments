@@ -11,8 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      # RELEASE_VERSION: ${{ github.event.release.tag_name }}
-      RELEASE_VERSION: v5.192
+      RELEASE_VERSION: ${{ github.event.release.tag_name }}
 
     steps:
     - name: Checkout code
