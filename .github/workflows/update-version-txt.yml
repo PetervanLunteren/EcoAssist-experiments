@@ -22,6 +22,7 @@ jobs:
     - name: Replace contents of version.txt
       run: |
         echo "${{ env.RELEASE_VERSION }}" > version.txt
+        cat version.txt
         
     - name: Commit changes
       run: |
