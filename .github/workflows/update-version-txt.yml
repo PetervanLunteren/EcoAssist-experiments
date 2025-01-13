@@ -16,10 +16,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        ref: ${{ github.ref_name }}
 
     - name: Replace contents of version.txt
       run: |
-        echo ${{ env.RELEASE_VERSION }} > version.txt
+        echo "${{ env.RELEASE_VERSION }}" > version.txt
         
     - name: Commit changes
       run: |
