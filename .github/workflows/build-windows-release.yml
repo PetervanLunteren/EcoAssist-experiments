@@ -60,7 +60,9 @@ jobs:
           git clone --depth 1 https://github.com/PetervanLunteren/EcoAssist-experiments.git "%root%\EcoAssist"
           rmdir /s /q "%root%\EcoAssist\.git"
           move "%root%\EcoAssist\main.py" "%root%\main.py"
-          echo ${{ env.RELEASE_VERSION }} > "%root%\EcoAssist\version.txt"
+          set RAW_VERSION=${{ env.RELEASE_VERSION }}
+          set CLEAN_VERSION=%RAW_VERSION:v=%
+          echo %CLEAN_VERSION% > "%root%\EcoAssist\version.txt"
           echo EcoAssist cloned
           
           @REM MegaDetector
