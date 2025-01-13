@@ -1,4 +1,4 @@
-name: Replace version TXT 
+name: Update version TXT
 
 on:
   workflow_dispatch:
