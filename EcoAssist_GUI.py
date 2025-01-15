@@ -63,7 +63,6 @@ import os
 import re
 import sys
 import cv2
-import git
 import json
 import math
 import time
