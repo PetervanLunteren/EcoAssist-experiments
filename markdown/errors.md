@@ -349,5 +349,5 @@ I’ll take a look and help you to get EcoAssist running!
 
 # Timelapse command to run EcoAssist in Timelapse mode
 ```
-(cd /d %homedrive%%homepath% && "%homedrive%%homepath%\EcoAssist_files\EcoAssist\open.bat" timelapse "C:\Users\smart\Desktop\test imgs") || (cd /d %ProgramFiles% && "%ProgramFiles%\EcoAssist_files\EcoAssist\open.bat" timelapse "C:\Users\smart\Desktop\test imgs")
+(cd /d %homedrive%%homepath% && "%homedrive%%homepath%\EcoAssist_files\EcoAssist\open.bat" timelapse "C:\Users\smart\Desktop\test_images") || (cd /d %ProgramFiles% && "%ProgramFiles%\EcoAssist_files\EcoAssist\open.bat" timelapse "C:\Users\smart\Desktop\test_images")
 ```
