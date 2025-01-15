@@ -346,3 +346,8 @@ I'm not sure what is gogin on, but I believe a hard reset might do the trick.
 12. Now you should see some output in the console. Again, copy-paste the entire console output, add it to your log file, and send it to me.
 
 I’ll take a look and help you to get EcoAssist running!
+
+# Timelapse command to run EcoAssist in Timelapse mode
+```
+( "%homedrive%%homepath%\EcoAssist_files\EcoAssist\open.bat" debug ) || ( "%ProgramFiles%\EcoAssist_files\EcoAssist\open.bat" debug ) || ( "%homedrive%\EcoAssist_files\EcoAssist\open.bat" debug )
+```
