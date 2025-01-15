@@ -44,7 +44,7 @@ Name "EcoAssist ${VERSION}"
 Section "Install"
 
     # Set fixed installation directory without prompting the user
-    StrCpy $INSTDIR "$PROFILE\EcoAssist"
+    StrCpy $INSTDIR "$PROFILE\EcoAssist_files"
 
     # Hide progress bar
     Push "true"
