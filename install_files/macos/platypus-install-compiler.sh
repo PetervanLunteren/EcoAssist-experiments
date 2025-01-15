@@ -10,7 +10,7 @@ APP_NAME="EcoAssist"
 APPLICATIONS_DIR="/Applications"
 SHORTCUT="${HOME}/Desktop/${APP_NAME}.app"
 TAR_FILE="/tmp/${APP_NAME}.tar.xz"
-INSTALL_DIR="/Applications/${APP_NAME}"
+INSTALL_DIR="/Applications/EcoAssist_files"
 PBAR_POS=0
 
 progress() {
