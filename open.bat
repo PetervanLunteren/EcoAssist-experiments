@@ -11,10 +11,4 @@ echo off
 @setlocal EnableDelayedExpansion
 
 @REM run script in timelapse mode
-if "%1" == "timelapse" (
-    echo Opening EcoAssist in timelapse mode...
-    "%homedrive%%homepath%\EcoAssist_files\envs\env-base\python.exe" "%homedrive%%homepath%\EcoAssist_files\EcoAssist\EcoAssist_GUI.py" --timelapse-path=%2
-) else (
-    echo Opening EcoAssist in debug mode...
-    "%homedrive%%homepath%\EcoAssist_files\envs\env-base\python.exe" "%homedrive%%homepath%\EcoAssist_files\EcoAssist\EcoAssist_GUI.py"
-)
+"%homedrive%%homepath%\EcoAssist_files\envs\env-base\python.exe" "%homedrive%%homepath%\EcoAssist_files\EcoAssist\EcoAssist_GUI.py" --timelapse-path=%2
