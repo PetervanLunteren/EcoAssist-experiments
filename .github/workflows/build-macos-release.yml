@@ -276,12 +276,3 @@ jobs:
 
           # upload release pinned version
           gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$PINNED_FOLDER_NAME/$PINNED_FILE_NAME
-
-          # upload latest release version
-          gsutil cp -r $PINNED_FILE_NAME gs://$BUCKET_NAME/$LATEST_FOLDER_NAME/$LATEST_FILE_NAME
-
-      - name:  Upload installer to Google Cloud
-        run: |
-          cd "${{ github.workspace }}/install_files/macos/"
-          INSTALLER="EcoAssist-${{ env.RELEASE_VERSION }}-installer.zip"
-          gsutil cp -r $INSTALLER gs://${{ env.BUCKET_NAME }}/latest/EcoAssist-latest-installer.zip
